@@ -1,25 +1,77 @@
-# Aurum & Co. — Prototipo web inicial
+# Joyería J-C — Microproyecto web
 
-Proyecto académico de Ingeniería Web 2 — Universidad Manuela Beltrán.
+**Universidad Manuela Beltrán · Ingeniería Web 2**  
+**Entrega 1: Diseño del microproyecto web**
 
-## Descripción
-Aurum & Co. es el prototipo de una plataforma web para una joyería de lujo. La interfaz permite explorar un catálogo de joyas, filtrar por categorías, buscar productos, consultar precios y disponibilidad, agregar artículos a una bolsa de compra y simular la confirmación de un pedido.
+## Integrantes
+- Cristian David Cotrino Vásquez
+- Jhonnatan Alexander López
 
-También incorpora un panel demostrativo con indicadores y una gráfica interactiva de pedidos construida con Chart.js. Las cifras y productos son datos simulados.
+## 1. Descripción del proyecto
+Joyería J-C es un prototipo web de comercio electrónico para una joyería de lujo. Presenta una colección digital de anillos, cadenas, collares, pulseras y aretes. Permite explorar los productos, consultar precios y disponibilidad demostrativa, preparar una bolsa de compra y simular la confirmación de un pedido.
 
-## Objetivo
-Construir una primera versión navegable, adaptable y visualmente coherente con la identidad de una joyería, como base para incorporar posteriormente backend, base de datos, autenticación y administración de inventario.
+## 2. Necesidad identificada
+Digitalizar la experiencia de venta y atención de una joyería mediante una plataforma elegante, segura, accesible y adaptable. Se busca facilitar la consulta de piezas y reducir la dependencia de la tienda física, además de ofrecer información para asesoría personalizada.
 
-## Tecnologías
-- HTML5: estructura semántica.
-- CSS3: diseño visual adaptable (responsive).
-- JavaScript: filtros, búsqueda, carrito y navegación.
-- Chart.js: gráfica interactiva.
-- Git y GitHub: control de versiones.
+## 3. Objetivo del proyecto
+Diseñar e implementar progresivamente una plataforma web que permita a los clientes explorar el catálogo, consultar detalles y disponibilidad, preparar pedidos y acceder a información de asesoría. En una siguiente fase, el administrador podrá gestionar productos, inventario y pedidos desde un panel.
 
-## Estructura
+## 4. Requerimientos del sistema
+
+### 4.1 Requerimientos funcionales definidos en la ficha técnica
+1. Registro e inicio de sesión con roles de cliente y administrador.
+2. Catálogo de productos con filtros y búsqueda.
+3. Consulta de detalles y disponibilidad de cada pieza.
+4. Carrito de compras y generación de pedidos.
+5. Panel de administración de productos, inventario y pedidos.
+6. Agendamiento de citas de asesoría.
+7. Consulta del estado del pedido.
+
+### 4.2 Requerimientos no funcionales
+- Diseño adaptable a móviles, tabletas y computadores.
+- Estética de lujo, clara, consistente y fácil de navegar.
+- Validación de datos y manejo de errores.
+- Protección de credenciales y sesiones.
+- Restricción de funciones según el perfil.
+- Código modular, mantenible y documentado.
+
+## 5. Arquitectura web propuesta
+
+| Componente | Tecnología propuesta | Responsabilidad |
+|---|---|---|
+| Frontend | HTML5, CSS3 y JavaScript | Interfaz y navegación del catálogo |
+| Backend | Python con Flask | Reglas de negocio y API |
+| Base de datos | SQL Server | Usuarios, productos, inventario y pedidos |
+| Control de acceso | Sesiones y roles | Restringir funciones según perfil |
+| Versionamiento | Git y GitHub | Historial y colaboración |
+
+**Estado de esta entrega:** el repositorio contiene un prototipo frontend. Flask, SQL Server, autenticación real, persistencia de datos y administración son componentes propuestos para las siguientes iteraciones; todavía no están implementados.
+
+## 6. Funcionalidades presentes en el prototipo
+- Navegación por las secciones de inicio, colección, esencia y asesoría.
+- Catálogo demostrativo de anillos, collares, pulseras y aretes.
+- Filtros por categoría y búsqueda por nombre o categoría.
+- Visualización de precios en pesos colombianos (COP) y disponibilidad simulada.
+- Carrito con agregado y eliminación de productos.
+- Cálculo automático del total de la bolsa.
+- Confirmación de pedido simulada, sin transacción ni pago real.
+- Panel demostrativo de indicadores y gráfica interactiva con Chart.js.
+- Diseño responsive para escritorio, tablet y móvil.
+- Animaciones de entrada, efectos al desplazarse, transiciones y estados hover.
+- Recomendaciones básicas para el cuidado de las joyas.
+
+## 7. Tecnologías y herramientas
+- HTML5 y CSS3.
+- JavaScript.
+- Chart.js mediante CDN.
+- Google Fonts: DM Sans y Playfair Display.
+- Git y GitHub.
+- Visual Studio Code como editor recomendado.
+
+## 8. Estructura del proyecto
+
 ```text
-aurum-co-prototipo/
+Joyeria-/
 ├── index.html
 ├── README.md
 ├── css/
@@ -28,40 +80,48 @@ aurum-co-prototipo/
     └── app.js
 ```
 
-## Cómo ejecutar
-1. Descarga o clona el repositorio.
-2. Abre la carpeta en Visual Studio Code.
-3. Abre `index.html` en un navegador actualizado. Se recomienda la extensión Live Server.
-4. Para ver la gráfica, permite la conexión a la biblioteca Chart.js mediante CDN.
+## 9. Instalación y ejecución local
+1. Clonar el repositorio:
 
-No requiere instalación de backend ni base de datos en esta primera entrega.
+   ```bash
+   git clone https://github.com/jhonnatanlopez2006-alt/Joyeria-.git
+   ```
 
-## Funcionalidades implementadas
-- Navegación entre secciones.
-- Catálogo de anillos, collares, pulseras y aretes.
-- Filtro por categoría y búsqueda por nombre.
-- Visualización de precio y disponibilidad simulada.
-- Carrito con agregado y eliminación de productos.
-- Cálculo automático del total.
-- Confirmación simulada del pedido, sin pagos reales.
-- Gráfica de pedidos por semana o por últimos seis meses.
-- Diseño responsive para escritorio, tablet y móvil.
-- Recomendaciones básicas para el cuidado de joyas.
+2. Ingresar a la carpeta:
 
-## Alcance y limitaciones
-Este prototipo no procesa pagos, no realiza envíos, no cuenta con autenticación real, no utiliza una base de datos y no se conecta a inventario físico. Los datos son ilustrativos y se utilizan únicamente para demostrar la interfaz y la interactividad solicitadas en la actividad.
+   ```bash
+   cd Joyeria-
+   ```
 
-## Integrantes
-- Cristian David Cotrino Vásquez
-- Jhonnatan Alexander López
+3. Abrir el proyecto en Visual Studio Code.
+4. Ejecutar `index.html` con Live Server o abrirlo directamente en un navegador actualizado.
+5. Para visualizar la gráfica, permitir la carga de Chart.js desde su CDN.
 
-## Evidencias sugeridas
-Guardar capturas en una carpeta `evidencias/`:
-1. `01-inicio.png`: página principal.
-2. `02-catalogo-filtros.png`: catálogo con una categoría seleccionada.
-3. `03-carrito.png`: bolsa con productos agregados.
-4. `04-grafica.png`: gráfica de pedidos.
-5. `05-responsive.png`: vista móvil o ventana estrecha.
+Esta entrega no requiere instalar Flask ni configurar SQL Server.
 
-## Publicación en GitHub
-Crear un repositorio público llamado `aurum-co`, subir el contenido de esta carpeta y copiar su URL pública para entregarla en Canvas.
+## 10. Alcance y limitaciones
+Este proyecto es un prototipo académico frontend. Los productos, existencias, indicadores y pedidos son datos de demostración. No se procesan pagos, no se generan órdenes persistentes, no existe autenticación real ni conexión a una base de datos o inventario físico. Tampoco están desarrollados todavía el backend Flask, los roles, el panel administrativo ni la agenda funcional de citas.
+
+Las fotografías de joyería y las fuentes tipográficas se cargan desde servicios externos, por lo que requieren conexión a internet. Antes de una publicación comercial se deben verificar las licencias, disponibilidad y derechos de uso de los recursos visuales.
+
+## 11. Historial de commits
+El historial consultado del repositorio contiene el commit inicial:
+
+| Commit | Descripción |
+|---|---|
+| `e436423` | `Add files via upload` — carga inicial de los archivos del prototipo (3 de noviembre de 2026). |
+
+Las modificaciones de esta entrega se registran en commits separados para el cambio de marca, el rediseño visual, las animaciones y esta documentación. El historial completo, con sus identificadores y fechas exactos, puede consultarse en la pestaña **Commits** del repositorio de GitHub.
+
+## 12. Evidencias sugeridas para la entrega
+1. Página de inicio y encabezado de Joyería J-C.
+2. Catálogo con filtros y búsqueda.
+3. Bolsa de compra con productos agregados y total.
+4. Panel demostrativo y gráfica de pedidos.
+5. Vista responsive en un dispositivo móvil.
+
+## 13. Resultado esperado
+Un prototipo web funcional a nivel de frontend, visualmente profesional y adaptable, que sirva como base para integrar autenticación, backend en Flask, base de datos SQL Server, gestión de inventario, pedidos y citas de asesoría.
+
+## 14. Conclusión
+Joyería J-C integra diseño de interfaces, desarrollo frontend, interactividad y control de versiones para responder a la necesidad de llevar la experiencia de una joyería de lujo al entorno digital. Esta versión establece una base documentada para continuar con los componentes de backend y persistencia definidos en la ficha técnica.
