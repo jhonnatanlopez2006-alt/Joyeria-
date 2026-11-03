@@ -58,7 +58,7 @@ Diseñar e implementar progresivamente una plataforma web que permita a los clie
 - Panel demostrativo de indicadores y gráfica interactiva con Chart.js.
 - Diseño responsive para escritorio, tablet y móvil.
 - Animaciones de entrada, efectos al desplazarse, transiciones y estados hover.
-- Video de joyería integrado en el bloque principal (hero), con reproducción automática silenciosa y en bucle.
+- Fotografía fija de joyería integrada en el bloque principal (hero); no utiliza video.
 - Ficha de detalle de cada producto con imagen ampliada, categoría, precio, disponibilidad y opción para agregarlo a la bolsa.
 - Favicon SVG personalizado con monograma J-C.
 - Identidad bitono de alto contraste: panel principal negro con tipografía blanca, área visual clara en grises y acentos dorados puntuales.
@@ -107,7 +107,7 @@ Esta entrega no requiere instalar Flask ni configurar SQL Server.
 ## 10. Alcance y limitaciones
 Este proyecto es un prototipo académico frontend. Los productos, existencias, indicadores y pedidos son datos de demostración. No se procesan pagos, no se generan órdenes persistentes, no existe autenticación real ni conexión a una base de datos o inventario físico. Tampoco están desarrollados todavía el backend Flask, los roles, el panel administrativo ni la agenda funcional de citas.
 
-Las fotografías, el video de joyería y las fuentes tipográficas se cargan desde servicios externos, por lo que requieren conexión a internet. El video está configurado en modo silencioso, reproducción automática y bucle; algunos navegadores pueden bloquear la reproducción automática. El favicon personalizado está definido en `favicon.svg`. Antes de una publicación comercial se deben verificar las licencias, disponibilidad y derechos de uso de los recursos visuales.
+Las fotografías de joyería y las fuentes tipográficas se cargan desde servicios externos, por lo que requieren conexión a internet. El favicon personalizado está definido en `favicon.svg`. Antes de una publicación comercial se deben verificar las licencias, disponibilidad y derechos de uso de los recursos visuales.
 
 ## 11. Historial de commits
 El historial consultado del repositorio contiene el commit inicial:
