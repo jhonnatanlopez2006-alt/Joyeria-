@@ -104,7 +104,22 @@
     <div id="cartItems" class="cart-items"><p class="cart-empty">Tu bolsa está esperando una pieza especial.</p></div>
     <div class="cart-footer"><div class="total-line"><span>Total estimado</span><strong id="cartTotal">$0</strong></div><button id="checkoutButton" class="button button-dark full-width">Confirmar pedido</button><p class="cart-disclaimer">Prototipo académico: no se realizan pagos reales.</p></div>
   </aside>
-  <div class="toast" id="toast" role="status"></div>
+
+  <div class="product-modal-backdrop hidden" id="productModalBackdrop"></div>
+  <section class="product-modal hidden" id="productModal" role="dialog" aria-modal="true" aria-labelledby="detailName" aria-hidden="true">
+    <button class="product-modal-close" id="closeProductModal" aria-label="Cerrar detalles">×</button>
+    <div class="product-modal-image"><img id="detailImage" src="" alt=""></div>
+    <div class="product-modal-copy">
+      <p class="eyebrow" id="detailCategory">DETALLES DE LA PIEZA</p>
+      <h2 id="detailName">Nombre de la joya</h2>
+      <p class="product-modal-price" id="detailPrice"></p>
+      <p class="product-modal-description" id="detailDescription"></p>
+      <dl class="product-specs"><div><dt>Disponibilidad</dt><dd id="detailStock"></dd></div><div><dt>Presentación</dt><dd>Empaque especial J-C</dd></div></dl>
+      <button class="button button-dark full-width" id="detailAddToCart">Agregar a la bolsa <span>＋</span></button>
+      <p class="cart-disclaimer">Producto de demostración académica.</p>
+    </div>
+  </section>
+\n  <div class="toast" id="toast" role="status"></div>
   <script src="js/app.js"></script>
 </body>
 </html>
