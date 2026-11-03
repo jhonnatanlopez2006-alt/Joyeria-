@@ -3,7 +3,7 @@ const products = [
  {id:2,name:"Collar Lumière",category:"Collares",price:285000,stock:4,label:"NUEVO",image:"https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=700&q=85"},
  {id:3,name:"Pulsera Éclat",category:"Pulseras",price:195000,stock:7,label:"",image:"https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=700&q=85"},
  {id:4,name:"Aretes Celeste",category:"Aretes",price:175000,stock:8,label:"DESTACADO",image:"https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=700&q=85"},
- {id:5,name:"Anillo Solitario",category:"Anillos",price:450000,stock:3,label:"",image:"https://images.unsplash.com/photo-1603565816030-6b389eeb23cb?auto=format&fit=crop&w=700&q=85"},
+ {id:5,name:"Anillo Solitario",category:"Anillos",price:450000,stock:3,label:"",image:"https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=700&q=85"},
  {id:6,name:"Collar Esencia",category:"Collares",price:240000,stock:6,label:"",image:"https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=700&q=85"},
  {id:7,name:"Pulsera Serena",category:"Pulseras",price:210000,stock:5,label:"",image:"https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=700&q=85"},
  {id:8,name:"Aretes Aura",category:"Aretes",price:160000,stock:9,label:"",image:"https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=700&q=85"}
