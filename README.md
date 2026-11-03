@@ -58,10 +58,10 @@ Diseñar e implementar progresivamente una plataforma web que permita a los clie
 - Panel demostrativo de indicadores y gráfica interactiva con Chart.js.
 - Diseño responsive para escritorio, tablet y móvil.
 - Animaciones de entrada, efectos al desplazarse, transiciones y estados hover.
-- Sección audiovisual con video de una joya en reproducción automática silenciosa y en bucle, contenida en una proporción 16:9 para evitar desbordamientos.
+- Video de joyería integrado en el bloque principal (hero), con reproducción automática silenciosa y en bucle.
 - Ficha de detalle de cada producto con imagen ampliada, categoría, precio, disponibilidad y opción para agregarlo a la bolsa.
 - Favicon SVG personalizado con monograma J-C.
-- Paleta minimalista en blanco, gris y negro con acentos dorados puntuales.
+- Identidad bitono de alto contraste: panel principal negro con tipografía blanca, área visual clara en grises y acentos dorados puntuales.
 - Recomendaciones básicas para el cuidado de las joyas.
 
 ## 7. Tecnologías y herramientas
