@@ -49,14 +49,19 @@ function closeProductDetails(){
  selectedProduct=null;
 }
 grid.addEventListener("click",e=>{
+ const add=e.target.closest("[data-add]");
+ if(add){
+  const p=products.find(x=>x.id===Number(add.dataset.add));
+  if(!p)return;
+  const found=cart.find(x=>x.id===p.id);
+  if(found)found.qty++;else cart.push({...p,qty:1});
+  renderCart();showToast(`${p.name} se agregó a tu bolsa`);
+  return;
+ }
  const detail=e.target.closest("[data-detail]");
  if(detail){openProductDetails(detail.dataset.detail);return;}
- const btn=e.target.closest("[data-add]");
- if(!btn)return;
- const p=products.find(x=>x.id===Number(btn.dataset.add));
- const found=cart.find(x=>x.id===p.id);
- if(found)found.qty++;else cart.push({...p,qty:1});
- renderCart();showToast(`${p.name} se agregó a tu bolsa`);
+ const card=e.target.closest("[data-open-product]");
+ if(card)openProductDetails(card.dataset.openProduct);
 });
 document.getElementById("closeProductModal").addEventListener("click",closeProductDetails);
 productModalBackdrop.addEventListener("click",closeProductDetails);
