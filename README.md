@@ -49,7 +49,7 @@ Diseñar e implementar progresivamente una plataforma web que permita a los clie
 
 ## 6. Funcionalidades presentes en el prototipo
 - Navegación por las secciones de inicio, colección, esencia y asesoría.
-- Catálogo demostrativo de anillos, collares, pulseras y aretes.
+- Catálogo demostrativo de anillos, collares, pulseras y aretes, incluyendo una fotografía personalizada del Anillo Solitario con fondo de estudio gris.
 - Filtros por categoría y búsqueda por nombre o categoría.
 - Visualización de precios en pesos colombianos (COP) y disponibilidad simulada.
 - Carrito con agregado y eliminación de productos.
