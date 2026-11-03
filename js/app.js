@@ -37,10 +37,32 @@ document.getElementById("closeCart").addEventListener("click",closeCart);
 overlay.addEventListener("click",closeCart);
 document.getElementById("checkoutButton").addEventListener("click",()=>{if(!cart.length){showToast("Agrega una joya antes de confirmar.");return}showToast("¡Pedido de demostración registrado! No se realizó ningún pago.");cart=[];renderCart();closeCart()});
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove("show"),2600)}
-document.getElementById("menuToggle").addEventListener("click",()=>document.getElementById("mainNav").classList.toggle("show"));
+document.getElementById("menuToggle").addEventListener("click",()=>{
+ const nav=document.getElementById("mainNav");
+ const expanded=nav.classList.toggle("show");
+ document.getElementById("menuToggle").setAttribute("aria-expanded",String(expanded));
+});
 document.querySelectorAll("#mainNav a").forEach(a=>a.addEventListener("click",()=>document.getElementById("mainNav").classList.remove("show")));
 document.getElementById("stockTotal").textContent=products.reduce((s,p)=>s+p.stock,0);
 renderProducts();renderCart();
+
+// Animaciones de aparición al desplazarse por la página.
+const revealTargets=document.querySelectorAll(".section-heading,.product-card,.editorial-copy,.editorial-image,.stat-card,.chart-card,.care-section>div");
+revealTargets.forEach(element=>element.classList.add("reveal"));
+if("IntersectionObserver" in window){
+ const revealObserver=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+   if(entry.isIntersecting){
+    entry.target.classList.add("visible");
+    revealObserver.unobserve(entry.target);
+   }
+  });
+ },{threshold:.12});
+ revealTargets.forEach(element=>revealObserver.observe(element));
+}else{
+ revealTargets.forEach(element=>element.classList.add("visible"));
+}
+
 let chart;
 function drawChart(period){
  const labels=period==="semana"?["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"]:["Jun","Jul","Ago","Sep","Oct","Nov"];
