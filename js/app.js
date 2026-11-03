@@ -16,12 +16,61 @@ const empty = document.getElementById("emptyState");
 function renderProducts(){
  const term = document.getElementById("searchInput").value.toLowerCase().trim();
  const shown = products.filter(p => (category==="Todos" || p.category===category) && (p.name.toLowerCase().includes(term) || p.category.toLowerCase().includes(term)));
- grid.innerHTML = shown.map(p=>`<article class="product-card"><div class="product-image"><img src="${p.image}" alt="${p.name}" loading="lazy">${p.label?`<span class="product-label">${p.label}</span>`:""}<button class="add-button" data-add="${p.id}" aria-label="Agregar ${p.name} al carrito">+</button></div><div class="product-info"><span class="product-category">${p.category}</span><h3>${p.name}</h3><div class="product-bottom"><strong>${money(p.price)}</strong><span>${p.stock} disponibles</span></div></div></article>`).join("");
+ grid.innerHTML = shown.map(p=>`<article class="product-card"><div class="product-image"><img src="${p.image}" alt="${p.name}" loading="lazy">${p.label?`<span class="product-label">${p.label}</span>`:""}<button class="add-button" data-add="${p.id}" aria-label="Agregar ${p.name} al carrito">+</button></div><div class="product-info"><span class="product-category">${p.category}</span><h3>${p.name}</h3><div class="product-bottom"><strong>${money(p.price)}</strong><span>${p.stock} disponibles</span></div><button class="detail-button" data-detail="${p.id}" aria-label="Ver detalles de ${p.name}">Ver detalles <span>↗</span></button></div></article>`).join("");
  empty.classList.toggle("hidden",shown.length>0);
 }
 document.getElementById("filters").addEventListener("click",e=>{const btn=e.target.closest("button[data-category]");if(!btn)return;category=btn.dataset.category;document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b===btn));renderProducts()});
 document.getElementById("searchInput").addEventListener("input",renderProducts);
-grid.addEventListener("click",e=>{const btn=e.target.closest("[data-add]");if(!btn)return;const p=products.find(x=>x.id===Number(btn.dataset.add));const found=cart.find(x=>x.id===p.id);if(found)found.qty++;else cart.push({...p,qty:1});renderCart();showToast(`${p.name} se agregó a tu bolsa`)});
+
+const productModal=document.getElementById("productModal");
+const productModalBackdrop=document.getElementById("productModalBackdrop");
+let selectedProduct=null;
+function openProductDetails(id){
+ selectedProduct=products.find(p=>p.id===Number(id));
+ if(!selectedProduct)return;
+ document.getElementById("detailImage").src=selectedProduct.image;
+ document.getElementById("detailImage").alt=selectedProduct.name;
+ document.getElementById("detailCategory").textContent=selectedProduct.category.toUpperCase()+" · JOYERÍA J-C";
+ document.getElementById("detailName").textContent=selectedProduct.name;
+ document.getElementById("detailPrice").textContent=money(selectedProduct.price);
+ document.getElementById("detailDescription").textContent="Una pieza seleccionada para complementar tu estilo. Diseño cuidado, acabado elegante y presentación especial, ideal para regalar o conservar en tus momentos más importantes.";
+ document.getElementById("detailStock").textContent=selectedProduct.stock+" unidades disponibles";
+ productModal.classList.remove("hidden");
+ productModalBackdrop.classList.remove("hidden");
+ productModal.setAttribute("aria-hidden","false");
+ document.body.classList.add("modal-open");
+ document.getElementById("closeProductModal").focus();
+}
+function closeProductDetails(){
+ productModal.classList.add("hidden");
+ productModalBackdrop.classList.add("hidden");
+ productModal.setAttribute("aria-hidden","true");
+ document.body.classList.remove("modal-open");
+ selectedProduct=null;
+}
+grid.addEventListener("click",e=>{
+ const detail=e.target.closest("[data-detail]");
+ if(detail){openProductDetails(detail.dataset.detail);return;}
+ const btn=e.target.closest("[data-add]");
+ if(!btn)return;
+ const p=products.find(x=>x.id===Number(btn.dataset.add));
+ const found=cart.find(x=>x.id===p.id);
+ if(found)found.qty++;else cart.push({...p,qty:1});
+ renderCart();showToast(`${p.name} se agregó a tu bolsa`);
+});
+document.getElementById("closeProductModal").addEventListener("click",closeProductDetails);
+productModalBackdrop.addEventListener("click",closeProductDetails);
+document.getElementById("detailAddToCart").addEventListener("click",()=>{
+ if(!selectedProduct)return;
+ const found=cart.find(x=>x.id===selectedProduct.id);
+ if(found)found.qty++;else cart.push({...selectedProduct,qty:1});
+ renderCart();showToast(`${selectedProduct.name} se agregó a tu bolsa`);
+ closeProductDetails();
+});
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape"&&!productModal.classList.contains("hidden"))closeProductDetails();
+});
+
 function renderCart(){
  const items=document.getElementById("cartItems");
  document.getElementById("cartCount").textContent=cart.reduce((s,p)=>s+p.qty,0);
