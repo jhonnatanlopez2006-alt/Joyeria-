@@ -109,9 +109,14 @@ El historial consultado del repositorio contiene el commit inicial:
 
 | Commit | Descripción |
 |---|---|
-| `e436423` | `Add files via upload` — carga inicial de los archivos del prototipo (3 de noviembre de 2026). |
+| `e436423` | `Add files via upload` — carga inicial de los archivos del prototipo. |
+| `16940b9` | `Rebrand site as Joyería J-C` — actualización del nombre y la identidad del sitio. |
+| `06313ba` | `Refresh Joyería J-C luxury visual design and animations` — renovación de estilos, colores y efectos visuales. |
+| `7d2231a` | `Add scroll reveal and accessible menu animation` — animaciones de aparición y mejora del menú móvil. |
+| `433f3b1` | `Update README with Joyería J-C requirements and project scope` — documentación alineada con la ficha técnica. |
+| `fe7e2f7` | `Polish Joyería J-C brand lockup` — ajuste final del logotipo tipográfico. |
 
-Las modificaciones de esta entrega se registran en commits separados para el cambio de marca, el rediseño visual, las animaciones y esta documentación. El historial completo, con sus identificadores y fechas exactos, puede consultarse en la pestaña **Commits** del repositorio de GitHub.
+Los identificadores se muestran abreviados para facilitar la lectura. El historial completo, con hashes y fechas exactos, está disponible en la pestaña **Commits** del repositorio.
 
 ## 12. Evidencias sugeridas para la entrega
 1. Página de inicio y encabezado de Joyería J-C.
