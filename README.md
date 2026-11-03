@@ -58,7 +58,8 @@ Diseñar e implementar progresivamente una plataforma web que permita a los clie
 - Panel demostrativo de indicadores y gráfica interactiva con Chart.js.
 - Diseño responsive para escritorio, tablet y móvil.
 - Animaciones de entrada, efectos al desplazarse, transiciones y estados hover.
-- Sección audiovisual con video de una joya en reproducción automática silenciosa y en bucle (requiere conexión).
+- Sección audiovisual con video de una joya en reproducción automática silenciosa y en bucle, contenida en una proporción 16:9 para evitar desbordamientos.
+- Ficha de detalle de cada producto con imagen ampliada, categoría, precio, disponibilidad y opción para agregarlo a la bolsa.
 - Favicon SVG personalizado con monograma J-C.
 - Paleta minimalista en blanco, gris y negro con acentos dorados puntuales.
 - Recomendaciones básicas para el cuidado de las joyas.
@@ -126,10 +127,10 @@ Los identificadores se muestran abreviados para facilitar la lectura. El histori
 
 ## 12. Evidencias sugeridas para la entrega
 1. Página de inicio y encabezado de Joyería J-C.
-2. Catálogo con filtros y búsqueda.
-3. Bolsa de compra con productos agregados y total.
-4. Panel demostrativo y gráfica de pedidos.
-5. Vista responsive en un dispositivo móvil.
+2. Sección de video con proporción adaptable.
+3. Catálogo con filtros, búsqueda y acceso a detalles de cada pieza.
+4. Ficha de producto y bolsa de compra con productos agregados y total.
+5. Panel demostrativo y vista responsive en un dispositivo móvil.
 
 ## 13. Resultado esperado
 Un prototipo web funcional a nivel de frontend, visualmente profesional y adaptable, que sirva como base para integrar autenticación, backend en Flask, base de datos SQL Server, gestión de inventario, pedidos y citas de asesoría.
