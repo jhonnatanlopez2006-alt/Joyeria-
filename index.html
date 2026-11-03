@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aurum & Co. — joyería fina, piezas especiales y asesoría personalizada.">
+  <title>Aurum & Co. | Joyería fina</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="announcement">PIEZAS QUE CUENTAN HISTORIAS · ENVÍO GRATIS EN COMPRAS SELECCIONADAS</div>
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="Aurum and Co inicio"><span class="brand-mark">A</span><span>AURUM <i>& CO.</i></span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">☰</button>
+    <nav id="mainNav">
+      <a href="#inicio">Inicio</a><a href="#catalogo">Colección</a><a href="#nosotros">Nuestra esencia</a><a href="#asesoria">Asesoría</a>
+    </nav>
+    <button class="cart-button" id="openCart">Bolsa <span id="cartCount">0</span></button>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="hero-copy">
+        <p class="eyebrow">JOYERÍA CONTEMPORÁNEA</p>
+        <h1>El brillo de lo<br><em>extraordinario.</em></h1>
+        <p class="hero-text">Diseños atemporales creados para acompañar tus momentos más especiales.</p>
+        <a class="button button-gold" href="#catalogo">Descubrir colección <span>↗</span></a>
+        <div class="hero-note"><span class="tiny-line"></span> Elegancia en cada detalle</div>
+      </div>
+      <div class="hero-image" role="img" aria-label="Anillos y joyas doradas sobre fondo elegante">
+        <div class="image-caption">COLECCIÓN · ESENCIA</div>
+      </div>
+    </section>
+
+    <section class="trust-strip">
+      <div><strong>01</strong><span>Diseños exclusivos</span></div><div><strong>02</strong><span>Calidad seleccionada</span></div><div><strong>03</strong><span>Atención personalizada</span></div>
+    </section>
+
+    <section class="section catalog-section" id="catalogo">
+      <div class="section-heading">
+        <div><p class="eyebrow">SELECCIÓN AURUM</p><h2>Piezas para <em>atesorar</em></h2></div>
+        <p>Encuentra ese detalle que habla por ti.</p>
+      </div>
+      <div class="catalog-tools">
+        <div class="filters" id="filters">
+          <button class="filter active" data-category="Todos">Todos</button>
+          <button class="filter" data-category="Anillos">Anillos</button>
+          <button class="filter" data-category="Collares">Collares</button>
+          <button class="filter" data-category="Pulseras">Pulseras</button>
+          <button class="filter" data-category="Aretes">Aretes</button>
+        </div>
+        <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Buscar una joya..." aria-label="Buscar productos"></label>
+      </div>
+      <div class="product-grid" id="productGrid"></div>
+      <p class="empty-state hidden" id="emptyState">No encontramos piezas con esa búsqueda.</p>
+    </section>
+
+    <section class="editorial" id="nosotros">
+      <div class="editorial-image"></div>
+      <div class="editorial-copy"><p class="eyebrow">NUESTRA ESENCIA</p><h2>La belleza está<br>en los <em>detalles.</em></h2><p>En Aurum & Co. creemos que una joya es más que un accesorio: es un recuerdo, una intención y una forma de expresar quién eres.</p><a href="#asesoria" class="text-link">Conoce nuestro servicio <span>→</span></a></div>
+    </section>
+
+    <section class="dashboard section">
+      <div class="section-heading"><div><p class="eyebrow">PANEL DEMOSTRATIVO</p><h2>Resumen de <em>actividad</em></h2></div><span class="demo-tag">DATOS SIMULADOS</span></div>
+      <div class="stats-grid">
+        <article class="stat-card"><span>Pedidos del mes</span><strong>128</strong><small class="positive">↑ 12% frente al periodo anterior</small></article>
+        <article class="stat-card"><span>Productos disponibles</span><strong id="stockTotal">24</strong><small>Inventario de demostración</small></article>
+        <article class="stat-card"><span>Valor promedio del pedido</span><strong>$285.000</strong><small>Pesos colombianos · COP</small></article>
+      </div>
+      <div class="chart-card"><div class="chart-heading"><div><h3>Comportamiento de ventas</h3><p>Visualización de ejemplo, no corresponde a ventas reales.</p></div><select id="chartPeriod" aria-label="Periodo de la gráfica"><option value="semana">Últimos 7 días</option><option value="mes">Últimos 6 meses</option></select></div><div class="chart-wrap"><canvas id="salesChart"></canvas></div></div>
+    </section>
+
+    <section class="care-section" id="asesoria">
+      <div><p class="eyebrow">UN CUIDADO ESPECIAL</p><h2>Tu joya merece<br><em>perdurar.</em></h2><p>Guarda tus piezas por separado, evita el contacto con perfumes y productos químicos, y límpialas con un paño suave.</p><a class="button button-dark" href="mailto:asesoria@aurumco.example">Solicitar asesoría</a></div>
+      <div class="care-symbol">A<span>✳</span></div>
+    </section>
+  </main>
+
+  <footer><a class="brand footer-brand" href="#inicio"><span class="brand-mark">A</span><span>AURUM <i>& CO.</i></span></a><p>Joyas para momentos que permanecen.</p><small>© 2026 Aurum & Co. · Prototipo académico</small></footer>
+
+  <div class="overlay hidden" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer" aria-label="Carrito de compras" aria-hidden="true">
+    <div class="drawer-header"><div><p class="eyebrow">TU SELECCIÓN</p><h2>Bolsa de compra</h2></div><button id="closeCart" class="close-button" aria-label="Cerrar carrito">×</button></div>
+    <div id="cartItems" class="cart-items"><p class="cart-empty">Tu bolsa está esperando una pieza especial.</p></div>
+    <div class="cart-footer"><div class="total-line"><span>Total estimado</span><strong id="cartTotal">$0</strong></div><button id="checkoutButton" class="button button-dark full-width">Confirmar pedido</button><p class="cart-disclaimer">Prototipo académico: no se realizan pagos reales.</p></div>
+  </aside>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="js/app.js"></script>
+</body>
+</html>
