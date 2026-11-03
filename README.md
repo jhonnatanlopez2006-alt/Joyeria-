@@ -114,7 +114,9 @@ El historial consultado del repositorio contiene el commit inicial:
 | `06313ba` | `Refresh Joyería J-C luxury visual design and animations` — renovación de estilos, colores y efectos visuales. |
 | `7d2231a` | `Add scroll reveal and accessible menu animation` — animaciones de aparición y mejora del menú móvil. |
 | `433f3b1` | `Update README with Joyería J-C requirements and project scope` — documentación alineada con la ficha técnica. |
-| `fe7e2f7` | `Polish Joyería J-C brand lockup` — ajuste final del logotipo tipográfico. |
+| `fe7e2f7` | `Polish Joyería J-C brand lockup` — ajuste del logotipo tipográfico. |
+| `7f704ed` | `Record actual project commit history in README` — actualización del historial documentado. |
+| `2299303` | `Finalize J-C footer mark and remove placeholder contact address` — ajuste final del logotipo y enlace de colección. |
 
 Los identificadores se muestran abreviados para facilitar la lectura. El historial completo, con hashes y fechas exactos, está disponible en la pestaña **Commits** del repositorio.
 
