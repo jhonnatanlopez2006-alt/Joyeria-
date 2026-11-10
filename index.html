@@ -9,16 +9,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="css/styles.css?v=20261103-9">
+  <link rel="stylesheet" href="css/styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="announcement">PIEZAS QUE CUENTAN HISTORIAS · ENVÍO GRATIS EN COMPRAS SELECCIONADAS</div>
   <header class="site-header">
     <a class="brand" href="#inicio" aria-label="Joyería J-C inicio"><span class="brand-mark">J-C</span><span>JOYERÍA <i>J-C</i></span></a>
-    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">☰</button>
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-controls="mainNav" aria-expanded="false">☰</button>
     <nav id="mainNav">
-      <a href="#inicio">Inicio</a><a href="#catalogo">Colección</a><a href="#nosotros">Nuestra esencia</a><a href="#asesoria">Asesoría</a>
+      <a href="#inicio">Inicio</a><a href="#catalogo">Colección</a><a href="#nosotros">Nuestra esencia</a><a href="#asesoria">Asesoría</a><a href="#actividad">Mis registros</a>
     </nav>
     <button class="cart-button" id="openCart">Bolsa <span id="cartCount">0</span></button>
   </header>
@@ -32,7 +32,7 @@
         <a class="button button-gold" href="#catalogo">Descubrir colección <span>↗</span></a>
         <div class="hero-note"><span class="tiny-line"></span> Hecho para brillar contigo</div>
       </div>
-      <div class="hero-image" aria-label="Video de presentación de joyería J-C">
+      <div class="hero-image" aria-label="Imagen editorial de la colección Joyería J-C">
         
         <div class="image-caption">JOYERÍA J-C · COLECCIÓN EXCLUSIVA</div>
       </div>
@@ -48,17 +48,17 @@
         <p>Encuentra ese detalle que habla por ti.</p>
       </div>
       <div class="catalog-tools">
-        <div class="filters" id="filters">
-          <button class="filter active" data-category="Todos">Todos</button>
-          <button class="filter" data-category="Anillos">Anillos</button>
-          <button class="filter" data-category="Collares">Collares</button>
-          <button class="filter" data-category="Pulseras">Pulseras</button>
-          <button class="filter" data-category="Aretes">Aretes</button>
+        <div class="filters" id="filters" aria-label="Filtrar por categoría">
+          <button class="filter active" data-category="Todos" aria-pressed="true">Todos</button>
+          <button class="filter" aria-pressed="false" data-category="Anillos">Anillos</button>
+          <button class="filter" aria-pressed="false" data-category="Collares">Collares</button>
+          <button class="filter" aria-pressed="false" data-category="Pulseras">Pulseras</button>
+          <button class="filter" aria-pressed="false" data-category="Aretes">Aretes</button>
         </div>
         <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Buscar una joya..." aria-label="Buscar productos"></label>
       </div>
-      <div class="product-grid" id="productGrid"></div>
-      <p class="empty-state hidden" id="emptyState">No encontramos piezas con esa búsqueda.</p>
+      <div class="catalog-secondary"><span id="resultsCount" aria-live="polite">8 piezas</span><div class="secondary-actions"><button id="favoritesToggle" type="button" aria-pressed="false" class="favorites-toggle">♡ Favoritos (<span id="favoritesCount">0</span>)</button><label for="sortSelect">Ordenar</label><select id="sortSelect"><option value="featured">Destacados</option><option value="price-asc">Menor precio</option><option value="price-desc">Mayor precio</option><option value="name">Nombre A–Z</option></select></div></div><div class="product-grid" id="productGrid"></div>
+      <p class="empty-state hidden" id="emptyState" aria-live="polite">No encontramos piezas con esa búsqueda.</p>
     </section>
 
     <section class="editorial" id="nosotros">
@@ -67,16 +67,35 @@
     </section>
 
     <section class="dashboard section">
-      <div class="section-heading"><div><p class="eyebrow">PANEL DEMOSTRATIVO</p><h2>Resumen de <em>actividad</em></h2></div><span class="demo-tag">DATOS SIMULADOS</span></div>
+      <div class="section-heading"><div><p class="eyebrow">ACTIVIDAD EN ESTE DISPOSITIVO</p><h2>Resumen de <em>actividad</em></h2></div><span class="demo-tag">DATOS LOCALES · NO VENTAS REALES</span></div>
       <div class="stats-grid">
-        <article class="stat-card"><span>Pedidos del mes</span><strong>128</strong><small class="positive">↑ 12% frente al periodo anterior</small></article>
+        <article class="stat-card"><span>Pedidos registrados (demo)</span><strong id="ordersTotal">0</strong><small>Solo en este navegador</small></article>
         <article class="stat-card"><span>Productos disponibles</span><strong id="stockTotal">24</strong><small>Inventario de demostración</small></article>
-        <article class="stat-card"><span>Valor promedio del pedido</span><strong>$285.000</strong><small>Pesos colombianos · COP</small></article>
+        <article class="stat-card"><span>Valor promedio de pedidos locales</span><strong id="orderValue">$0</strong><small>Sin pagos reales · COP</small></article>
       </div>
-      <div class="chart-card"><div class="chart-heading"><div><h3>Comportamiento de ventas</h3><p>Visualización de ejemplo, no corresponde a ventas reales.</p></div><select id="chartPeriod" aria-label="Periodo de la gráfica"><option value="semana">Últimos 7 días</option><option value="mes">Últimos 6 meses</option></select></div><div class="chart-wrap"><canvas id="salesChart"></canvas></div></div>
+      <div class="chart-card"><div class="chart-heading"><div><h3>Comportamiento de ventas</h3><p>Pedidos registrados localmente, sin ventas reales.</p></div><select id="chartPeriod" aria-label="Periodo de la gráfica"><option value="semana">Últimos 7 días</option><option value="mes">Últimos 6 meses</option></select></div><div class="chart-wrap"><canvas id="salesChart" aria-label="Gráfica de registros de pedidos locales"></canvas><p id="chartFallback" class="hidden"></p></div></div>
     </section>
 
-    <section class="care-section" id="asesoria">
+    <section class="experience-section section" id="asesoria">
+  <div class="section-heading"><div><p class="eyebrow">ATENCIÓN PERSONALIZADA · DEMO</p><h2>Una experiencia <em>a tu medida</em></h2></div><p>Solicita un horario de asesoría en este dispositivo. No se envía a un asesor real.</p></div>
+  <div class="experience-layout"><div class="experience-panel">
+   <h3>Solicitar asesoría</h3><p>Explora cómo funcionaría nuestro proceso de reservas.</p>
+   <form id="appointmentForm" novalidate>
+    <div class="form-grid"><label>Nombre completo<input type="text" name="name" autocomplete="name" maxlength="80" required><small data-error="name"></small></label><label>Correo electrónico<input type="email" name="email" autocomplete="email" maxlength="120" required><small data-error="email"></small></label>
+    <label>Tipo de asesoría<select name="type" required></select><small data-error="type"></small></label><label>Fecha deseada<input type="date" name="date" required><small data-error="date"></small></label>
+    <label>Hora disponible<select name="time" required></select><small data-error="time"></small></label></div>
+    <button type="submit" class="button button-dark">Registrar solicitud local <span>↗</span></button>
+    <p class="form-note">Solo se guarda fecha, hora y tipo de asesoría en este navegador. Los datos de contacto no se almacenan ni se transmiten.</p>
+   </form></div>
+   <div class="experience-visual"><p class="eyebrow">EL ARTE DE ELEGIR</p><h3>Los detalles hacen inolvidable cada historia.</h3><span>J-C · JOYERÍA CONTEMPORÁNEA</span></div>
+  </div>
+ </section>
+ <section class="section account-section" id="actividad">
+  <div class="section-heading"><div><p class="eyebrow">TUS REGISTROS LOCALES</p><h2>Tu espacio <em>J-C</em></h2></div><p>Sin cuenta ni servidor: esta información solo existe en el navegador actual.</p></div>
+  <div class="account-grid"><article class="activity-panel"><h3>Historial de pedidos <small>DEMO</small></h3><div id="ordersList" aria-live="polite"></div><form id="orderLookupForm" class="lookup-form"><label for="orderLookup">Consultar referencia local</label><div><input id="orderLookup" type="text" placeholder="JC-..." maxlength="90" required><button class="button button-dark" type="submit">Consultar</button></div><p id="lookupResult" role="status"></p></form></article>
+  <article class="activity-panel"><h3>Solicitudes de asesoría <small>DEMO</small></h3><div id="appointmentsList" aria-live="polite"></div><p class="form-note">Las solicitudes se pueden cancelar en este dispositivo. No representan citas confirmadas por la joyería.</p></article></div>
+ </section>
+ <section class="care-section" id="cuidados">
       <div><p class="eyebrow">UN CUIDADO ESPECIAL</p><h2>Tu joya merece<br><em>perdurar.</em></h2><p>Guarda tus piezas por separado, evita el contacto con perfumes y productos químicos, y límpialas con un paño suave.</p><a class="button button-dark" href="#catalogo">Explorar colección</a></div>
       <div class="care-symbol">A<span>✳</span></div>
     </section>
@@ -88,7 +107,7 @@
   <aside class="cart-drawer" id="cartDrawer" aria-label="Carrito de compras" aria-hidden="true">
     <div class="drawer-header"><div><p class="eyebrow">TU SELECCIÓN</p><h2>Bolsa de compra</h2></div><button id="closeCart" class="close-button" aria-label="Cerrar carrito">×</button></div>
     <div id="cartItems" class="cart-items"><p class="cart-empty">Tu bolsa está esperando una pieza especial.</p></div>
-    <div class="cart-footer"><div class="total-line"><span>Total estimado</span><strong id="cartTotal">$0</strong></div><button id="checkoutButton" class="button button-dark full-width">Confirmar pedido</button><p class="cart-disclaimer">Prototipo académico: no se realizan pagos reales.</p></div>
+    <div class="cart-footer"><div class="total-line"><span>Total estimado</span><strong id="cartTotal">$0</strong></div><button id="checkoutButton" class="button button-dark full-width">Confirmar pedido</button><p class="cart-disclaimer">Demostración académica. No se procesan pagos ni se envían pedidos.</p></div>
   </aside>
 
   <div class="product-modal-backdrop hidden" id="productModalBackdrop"></div>
@@ -105,7 +124,24 @@
       <p class="cart-disclaimer">Producto de demostración académica.</p>
     </div>
   </section>
-\n  <div class="toast" id="toast" role="status"></div>
-  <script src="js/app.js?v=20261103-11"></script>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <div class="product-modal-backdrop hidden" id="checkoutBackdrop"></div>
+  <section class="dialog-card hidden" id="checkoutDialog" role="dialog" aria-modal="true" aria-label="Confirmación demostrativa de pedido" aria-hidden="true">
+   <div class="dialog-head"><div><p class="eyebrow">ÚLTIMO PASO · DEMO</p><h2>Confirmar selección</h2></div><button id="closeCheckout" class="close-button" aria-label="Cerrar formulario">×</button></div>
+   <p>La confirmación solo guarda un pedido en este navegador. No hay compra, pago, envío de datos ni reserva de inventario.</p>
+   <form id="checkoutForm" novalidate>
+    <label>Nombre completo<input name="name" type="text" autocomplete="name" maxlength="80" required><small data-error="name"></small></label>
+    <label>Correo electrónico<input name="email" type="email" autocomplete="email" maxlength="120" required><small data-error="email"></small></label>
+    <label class="check-label"><input name="accept" type="checkbox" required> Entiendo que es una simulación sin compra real.</label><small data-error="accept"></small>
+    <button class="button button-gold full-width" type="submit">Registrar pedido de demostración</button>
+   </form>
+  </section>
+  <div class="product-modal-backdrop hidden" id="receiptBackdrop"></div>
+  <section class="dialog-card hidden" id="receiptDialog" role="dialog" aria-modal="true" aria-label="Comprobante de demostración" aria-hidden="true">
+   <p class="eyebrow">REGISTRO COMPLETADO</p><h2>Tu selección quedó registrada.</h2><p id="receiptText"></p><button type="button" class="button button-dark full-width" id="closeReceipt">Entendido</button>
+  </section>
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>

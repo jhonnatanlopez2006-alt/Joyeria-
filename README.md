@@ -1,139 +1,145 @@
-# Joyería J-C — Microproyecto web
+# Joyería J-C — Fase II: evolución y desarrollo del producto web
 
 **Universidad Manuela Beltrán · Ingeniería Web 2**  
-**Entrega 1: Diseño del microproyecto web**
+**Repositorio original:** https://github.com/jhonnatanlopez2006-alt/Joyeria-  
+**Estado:** Fase II · prototipo funcional de comercio electrónico con persistencia LOCAL de demostración.
 
 ## Integrantes
-- Cristian David Cotrino Vásquez
-- Jhonnatan Alexander López
+- Cristian David Cotrino Vásquez.
+- Jhonnatan Alexander López.
 
-## 1. Descripción del proyecto
-Joyería J-C es un prototipo web de comercio electrónico para una joyería de lujo. Presenta una colección digital de anillos, cadenas, collares, pulseras y aretes. Permite explorar los productos, consultar precios y disponibilidad demostrativa, preparar una bolsa de compra y simular la confirmación de un pedido.
+> Responsabilidades específicas: el equipo debe registrar su distribución real de tareas. El historial de GitHub evidencia cambios, pero no permite atribuir automáticamente todo el desarrollo a ambos integrantes.
 
-## 2. Necesidad identificada
-Digitalizar la experiencia de venta y atención de una joyería mediante una plataforma elegante, segura, accesible y adaptable. Se busca facilitar la consulta de piezas y reducir la dependencia de la tienda física, además de ofrecer información para asesoría personalizada.
+## 1. Proyecto, problema y objetivo
+**Joyería J-C** es la evolución del escaparate digital de una joyería de estilo contemporáneo y lujo. Busca resolver la dificultad de explorar las piezas, compararlas y preparar una solicitud de compra o asesoría fuera del establecimiento físico.
 
-## 3. Objetivo del proyecto
-Diseñar e implementar progresivamente una plataforma web que permita a los clientes explorar el catálogo, consultar detalles y disponibilidad, preparar pedidos y acceder a información de asesoría. En una siguiente fase, el administrador podrá gestionar productos, inventario y pedidos desde un panel.
+**Objetivo:** ofrecer una experiencia responsiva y accesible para descubrir una colección, consultar detalles, crear una selección, explorar un proceso de pedido de demostración y registrar solicitudes de asesoría en el navegador.
 
-## 4. Requerimientos del sistema
+**Alcance actual:** frontend interactivo con datos de catálogo ficticios, conservación de selecciones y registros en `localStorage`. No hay pago real, autenticación, sincronización de stock, despacho, servidor, reserva efectiva ni almacenamiento de datos del cliente.
 
-### 4.1 Requerimientos funcionales definidos en la ficha técnica
-1. Registro e inicio de sesión con roles de cliente y administrador.
-2. Catálogo de productos con filtros y búsqueda.
-3. Consulta de detalles y disponibilidad de cada pieza.
-4. Carrito de compras y generación de pedidos.
-5. Panel de administración de productos, inventario y pedidos.
-6. Agendamiento de citas de asesoría.
-7. Consulta del estado del pedido.
+## 2. Evolución desde Fase I
+La primera fase contaba con página inicial, identidad J-C en negro/blanco/dorado, catálogo, filtros, carrito temporal, modales, animaciones y un panel con valores fijos simulados.
 
-### 4.2 Requerimientos no funcionales
-- Diseño adaptable a móviles, tabletas y computadores.
-- Estética de lujo, clara, consistente y fácil de navegar.
-- Validación de datos y manejo de errores.
-- Protección de credenciales y sesiones.
-- Restricción de funciones según el perfil.
-- Código modular, mantenible y documentado.
+En la Fase II:
+- Se conserva el mismo repositorio, la identidad visual y la fotografía original `assets/anillo-solitario-jc.jpg`.
+- Se separan datos, servicios, reglas de negocio y utilidades en módulos ES.
+- Se agregan favoritos, ordenamiento, búsqueda normalizada (tildes y mayúsculas) y contador de resultados.
+- El carrito conserva productos entre recargas, gestiona cantidades, respeta el stock de demostración y calcula subtotales.
+- Se incorpora un formulario de confirmación con validación y aceptación explícita de la naturaleza simulada.
+- Los pedidos demo quedan guardados en el navegador, con referencia, historial y consulta por código.
+- Se registra una solicitud local de asesoría con validación de campos, fecha, horarios y conflicto de reservas en el mismo navegador; permite cancelación.
+- El panel deja de mostrar cantidades de pedidos inventadas y presenta registros locales. Gráfica con Chart.js cuando está disponible, con alternativa textual.
+- Se amplía el diseño responsive, navegación por teclado y consideración por movimiento reducido.
+- Se agregan pruebas automatizadas sin dependencias externas, validación de sintaxis, CI de GitHub Actions y documentación de arquitectura, requisitos, decisiones y pruebas.
 
-## 5. Arquitectura web propuesta
-
-| Componente | Tecnología propuesta | Responsabilidad |
+## 3. Funcionalidades y estado
+| Módulo | Estado | Limitación |
 |---|---|---|
-| Frontend | HTML5, CSS3 y JavaScript | Interfaz y navegación del catálogo |
-| Backend | Python con Flask | Reglas de negocio y API |
-| Base de datos | SQL Server | Usuarios, productos, inventario y pedidos |
-| Control de acceso | Sesiones y roles | Restringir funciones según perfil |
-| Versionamiento | Git y GitHub | Historial y colaboración |
+| Inicio, navegación, diseño responsive y animaciones | Implementado | Recursos visuales externos requieren conexión |
+| Catálogo, detalle, filtros, búsqueda y orden | Implementado | Productos de demostración |
+| Favoritos y carrito con cantidades | Implementado | `localStorage`, limitado al dispositivo/navegador |
+| Validación y registro de pedido | Implementado como demo | Sin transacción, pago o backend |
+| Historial y consulta por referencia | Implementado como demo | No consulta pedidos externos |
+| Formulario de solicitud de asesoría y cancelación | Implementado como demo | Sin agenda real ni correo de confirmación |
+| Indicadores y gráfica de pedidos | Implementado | Solo registros locales, no ventas reales |
+| Autenticación, roles y administración de inventario | Pendiente | Planeado para fase posterior |
+| API Flask + SQL Server | Pendiente | Planeado para fase posterior |
 
-**Estado de esta entrega:** el repositorio contiene un prototipo frontend. Flask, SQL Server, autenticación real, persistencia de datos y administración son componentes propuestos para las siguientes iteraciones; todavía no están implementados.
-
-## 6. Funcionalidades presentes en el prototipo
-- Navegación por las secciones de inicio, colección, esencia y asesoría.
-- Catálogo demostrativo de anillos, collares, pulseras y aretes, incluyendo una fotografía personalizada del Anillo Solitario con fondo de estudio gris.
-- Filtros por categoría y búsqueda por nombre o categoría.
-- Visualización de precios en pesos colombianos (COP) y disponibilidad simulada.
-- Carrito con agregado y eliminación de productos.
-- Cálculo automático del total de la bolsa.
-- Confirmación de pedido simulada, sin transacción ni pago real.
-- Panel demostrativo de indicadores y gráfica interactiva con Chart.js.
-- Diseño responsive para escritorio, tablet y móvil.
-- Animaciones de entrada, efectos al desplazarse, transiciones y estados hover.
-- Fotografía fija de joyería integrada en el bloque principal (hero); no utiliza video.
-- Ficha de detalle de cada producto con imagen ampliada, categoría, precio, disponibilidad y opción para agregarlo a la bolsa.
-- Favicon SVG personalizado con monograma J-C.
-- Identidad bitono de alto contraste: panel principal negro con tipografía blanca, área visual clara en grises y acentos dorados puntuales.
-- Recomendaciones básicas para el cuidado de las joyas.
-
-## 7. Tecnologías y herramientas
-- HTML5 y CSS3.
-- JavaScript.
-- Chart.js mediante CDN.
-- Google Fonts: DM Sans y Playfair Display.
-- Git y GitHub.
-- Visual Studio Code como editor recomendado.
-
-## 8. Estructura del proyecto
+## 4. Tecnología, dependencias y arquitectura
+- **Frontend:** HTML5, CSS3 y JavaScript nativo con módulos ECMAScript.
+- **Persistencia temporal:** Web Storage (`localStorage`). Es una simulación, no un servidor.
+- **Gráfica:** Chart.js por CDN; hay alternativa textual si no carga.
+- **Fuentes:** Google Fonts (DM Sans, Playfair Display).
+- **Testing:** Node.js 20+ con `node:test`, sin librerías de testing de terceros.
+- **Control de versiones y CI:** GitHub y GitHub Actions.
+- **Estrategia futura:** Python/Flask (API REST) y SQL Server, no implementados.
 
 ```text
 Joyeria-/
 ├── index.html
 ├── favicon.svg
-├── README.md
+├── assets/
+│   └── anillo-solitario-jc.jpg
 ├── css/
 │   └── styles.css
-└── js/
-    └── app.js
+├── js/
+│   └── app.js                    # Controlador UI
+├── src/
+│   ├── data/products.js         # Catálogo de demostración
+│   ├── models/shop.js           # Reglas funcionales y validaciones
+│   ├── services/storage.js      # Persistencia local
+│   └── utils/format.js          # Formato, fechas y escape
+├── tests/shop.test.js
+├── documentacion/
+│   ├── arquitectura/README.md
+│   ├── requerimientos/FASE_II.md
+│   ├── decisiones_tecnicas/ADR-001-frontend.md
+│   └── pruebas/PLAN.md
+├── .github/workflows/quality.yml
+├── .gitignore
+├── package.json
+└── README.md
 ```
 
-## 9. Instalación y ejecución local
-1. Clonar el repositorio:
+**Decisión de arquitectura:** se conserva el stack original de la primera fase, reforzándolo con separación de responsabilidades. Esta app no requiere backend para demostrar interacciones locales; el plan para integrarlo se documenta en `documentacion/arquitectura/README.md`.
 
+## 5. Instalación, configuración y ejecución
+1. Clonar:
    ```bash
    git clone https://github.com/jhonnatanlopez2006-alt/Joyeria-.git
-   ```
-
-2. Ingresar a la carpeta:
-
-   ```bash
    cd Joyeria-
    ```
+2. Requisito: navegador moderno y un servidor HTTP local. Para ejecutar pruebas se requiere **Node.js 20+**.
+3. Ejecutar el servidor (Python 3):
+   ```bash
+   python -m http.server 5500
+   ```
+4. Abrir **http://localhost:5500**. Alternativamente, usar la extensión Live Server de VS Code.
+5. Las rutas de módulos ES requieren servir la web por HTTP; no se recomienda abrir el HTML con protocolo `file://`.
+6. No hay variables de entorno, credenciales ni base de datos que configurar. El catálogo es una demostración integrada.
 
-3. Abrir el proyecto en Visual Studio Code.
-4. Ejecutar `index.html` con Live Server o abrirlo directamente en un navegador actualizado.
-5. Para visualizar la gráfica, permitir la carga de Chart.js desde su CDN.
+### Comprobaciones de calidad
+```bash
+npm run check
+npm test
+```
+Ambos comandos usan Node.js; `npm install` no es necesario porque no hay dependencias del proyecto. Las comprobaciones también están descritas en `.github/workflows/quality.yml`.
 
-Esta entrega no requiere instalar Flask ni configurar SQL Server.
+## 6. Pruebas y evidencias
+- **Pruebas unitarias:** `tests/shop.test.js`: catálogo, búsqueda, favoritos, orden, límites de stock, totales, validación de pedido, agenda, persistencia y recuperación tras datos inválidos.
+- **Validación de sintaxis:** `npm run check`.
+- **CI:** `.github/workflows/quality.yml` ejecuta los tests cuando GitHub Actions puede iniciar el flujo.
+- **Plan de pruebas manuales:** `documentacion/pruebas/PLAN.md`, incluyendo escritorio/móvil, teclado, recargas y formularios.
 
-## 10. Alcance y limitaciones
-Este proyecto es un prototipo académico frontend. Los productos, existencias, indicadores y pedidos son datos de demostración. No se procesan pagos, no se generan órdenes persistentes, no existe autenticación real ni conexión a una base de datos o inventario físico. Tampoco están desarrollados todavía el backend Flask, los roles, el panel administrativo ni la agenda funcional de citas.
+Los resultados reales deben verificarse en **Actions** y en el navegador. La presencia de un test no constituye por sí sola evidencia de aprobación. No se presentan capturas ni ensayos manuales como completados si no se han ejecutado.
 
-Las fotografías de joyería y las fuentes tipográficas se cargan desde servicios externos, por lo que requieren conexión a internet. El favicon personalizado está definido en `favicon.svg`. Antes de una publicación comercial se deben verificar las licencias, disponibilidad y derechos de uso de los recursos visuales.
+## 7. Documentación técnica
+- [Arquitectura y diagrama](documentacion/arquitectura/README.md)
+- [Trazabilidad de requisitos](documentacion/requerimientos/FASE_II.md)
+- [Decisión tecnológica](documentacion/decisiones_tecnicas/ADR-001-frontend.md)
+- [Plan y casos de prueba](documentacion/pruebas/PLAN.md)
 
-## 11. Historial de commits
-El historial consultado del repositorio contiene el commit inicial:
+## 8. Registro de evolución (commits)
+Los commits de la Fase I se conservan. La Fase II documenta incrementos con nombres convencionales (`refactor:`, `feat:`, `test:`, `docs:`). Para inspeccionar autores, fechas, archivos y hashes completos, consultar la pestaña **Commits** del repositorio. El cambio fue preparado en la rama `fase-ii/evolucion-web-2026` antes de integrarlo a la rama principal.
 
-| Commit | Descripción |
-|---|---|
-| `e436423` | `Add files via upload` — carga inicial de los archivos del prototipo. |
-| `16940b9` | `Rebrand site as Joyería J-C` — actualización del nombre y la identidad del sitio. |
-| `06313ba` | `Refresh Joyería J-C luxury visual design and animations` — renovación de estilos, colores y efectos visuales. |
-| `7d2231a` | `Add scroll reveal and accessible menu animation` — animaciones de aparición y mejora del menú móvil. |
-| `433f3b1` | `Update README with Joyería J-C requirements and project scope` — documentación alineada con la ficha técnica. |
-| `fe7e2f7` | `Polish Joyería J-C brand lockup` — ajuste del logotipo tipográfico. |
-| `7f704ed` | `Record actual project commit history in README` — actualización del historial documentado. |
-| `2299303` | `Finalize J-C footer mark and remove placeholder contact address` — ajuste final del logotipo y enlace de colección. |
+## 9. Privacidad, integridad y restricciones
+- No se procesan pagos, tarjetas ni credenciales, ni se envían datos de formularios a un servidor.
+- Los nombres y correos ingresados solo se usan para validar; **no se almacenan**.
+- Los pedidos y solicitudes guardan identificadores, importes y datos de operación simulados; no tienen valor contractual.
+- `localStorage` puede borrarse, falsificarse o no estar disponible. No sirve como fuente de inventario, identidad o pedidos reales.
+- Las fotografías externas y recursos de CDN deben evaluarse en disponibilidad y derechos de uso antes de uso comercial.
 
-Los identificadores se muestran abreviados para facilitar la lectura. El historial completo, con hashes y fechas exactos, está disponible en la pestaña **Commits** del repositorio.
+## 10. Próximos pasos
+1. Construir una API REST Flask y persistencia SQL Server con migraciones.
+2. Incorporar autenticación real, roles y autorización del lado del servidor.
+3. Implementar CRUD administrativo de inventario y pedidos y prevención de sobreventa con transacciones.
+4. Integrar reservas con agenda multiusuario, notificaciones y trazabilidad.
+5. Ampliar tests end-to-end, verificación de accesibilidad y despliegue automatizado.
+6. Integrar pagos solo si el alcance futuro lo exige, mediante un proveedor autorizado.
 
-## 12. Evidencias sugeridas para la entrega
-1. Página de inicio y encabezado de Joyería J-C.
-2. Sección de video con proporción adaptable.
-3. Catálogo con filtros, búsqueda y acceso a detalles de cada pieza.
-4. Ficha de producto y bolsa de compra con productos agregados y total.
-5. Panel demostrativo y vista responsive en un dispositivo móvil.
+## 11. Entrega en Canvas
+**Integrantes:** Cristian David Cotrino Vásquez; Jhonnatan Alexander López.  
+**Proyecto:** Joyería J-C.  
+**Repositorio:** https://github.com/jhonnatanlopez2006-alt/Joyeria-  
 
-## 13. Resultado esperado
-Un prototipo web funcional a nivel de frontend, visualmente profesional y adaptable, que sirva como base para integrar autenticación, backend en Flask, base de datos SQL Server, gestión de inventario, pedidos y citas de asesoría.
-
-## 14. Conclusión
-Joyería J-C integra diseño de interfaces, desarrollo frontend, interactividad y control de versiones para responder a la necesidad de llevar la experiencia de una joyería de lujo al entorno digital. Esta versión establece una base documentada para continuar con los componentes de backend y persistencia definidos en la ficha técnica.
+**Resumen:** Se transformó el prototipo inicial en una vitrina modular y responsiva con catálogo avanzado, favoritos, carrito persistente, pedidos y citas de demostración, indicadores basados en registros locales y componentes accesibles. Se incorporaron pruebas automatizadas, flujo de calidad y documentación técnica para continuar con el backend en etapas posteriores.

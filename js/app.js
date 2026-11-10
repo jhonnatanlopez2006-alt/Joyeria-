@@ -1,129 +1,190 @@
-const products = [
- {id:1,name:"Anillo Aurora",category:"Anillos",price:320000,stock:5,label:"MÁS VENDIDO",image:"https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=700&q=85"},
- {id:2,name:"Collar Lumière",category:"Collares",price:285000,stock:4,label:"NUEVO",image:"https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=700&q=85"},
- {id:3,name:"Pulsera Éclat",category:"Pulseras",price:195000,stock:7,label:"",image:"https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=700&q=85"},
- {id:4,name:"Aretes Celeste",category:"Aretes",price:175000,stock:8,label:"DESTACADO",image:"https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=700&q=85"},
- {id:5,name:"Anillo Solitario",category:"Anillos",price:450000,stock:3,label:"",image:"https://raw.githubusercontent.com/jhonnatanlopez2006-alt/Joyeria-/main/assets/anillo-solitario-jc.jpg"},
- {id:6,name:"Collar Esencia",category:"Collares",price:240000,stock:6,label:"",image:"https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=700&q=85"},
- {id:7,name:"Pulsera Serena",category:"Pulseras",price:210000,stock:5,label:"",image:"https://images.unsplash.com/photo-1573408301185-9146fe634ad0?auto=format&fit=crop&w=700&q=85"},
- {id:8,name:"Aretes Aura",category:"Aretes",price:160000,stock:9,label:"",image:"https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=700&q=85"}
-];
-const money = n => new Intl.NumberFormat("es-CO",{style:"currency",currency:"COP",maximumFractionDigits:0}).format(n);
-let category = "Todos";
-let cart = [];
-const grid = document.getElementById("productGrid");
-const empty = document.getElementById("emptyState");
+import {PRODUCTS as products,CATEGORIES} from "../src/data/products.js";
+import {money,escapeHTML,localDateString} from "../src/utils/format.js";
+import {filterProducts,sanitizeCart,addToCart,setQuantity,cartSummary,validateCheckout,validateAppointment,createOrder,APPOINTMENT_TIMES,APPOINTMENT_TYPES} from "../src/models/shop.js";
+import {readState,writeState} from "../src/services/storage.js";
+
+const $=id=>document.getElementById(id);
+const state=readState();
+state.cart=sanitizeCart(state.cart,products);
+state.favorites=[...new Set(state.favorites.map(Number).filter(id=>products.some(p=>p.id===id)))];
+state.orders=state.orders.filter(o=>o&&Array.isArray(o.items)&&typeof o.id==="string").slice(-30);
+state.appointments=state.appointments.filter(a=>a&&typeof a.date==="string").slice(-30);
+let category="Todos",searchTerm="",sort="featured",favoritesOnly=false,selectedProduct=null,lastFocus=null,toastTimeout;
+const persist=()=>{if(!writeState(state))notify("El almacenamiento está bloqueado; los cambios solo durarán esta sesión.");};
+const safe=value=>escapeHTML(value);
+const notify=msg=>{const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>t.classList.remove("show"),3500);};
+const product=id=>products.find(p=>p.id===Number(id));
+
 function renderProducts(){
- const term = document.getElementById("searchInput").value.toLowerCase().trim();
- const shown = products.filter(p => (category==="Todos" || p.category===category) && (p.name.toLowerCase().includes(term) || p.category.toLowerCase().includes(term)));
- grid.innerHTML = shown.map(p=>`<article class="product-card" data-open-product="${p.id}"><div class="product-image"><img src="${p.image}" alt="Ver detalles de ${p.name}" loading="lazy" data-detail="${p.id}" tabindex="0" role="button" aria-label="Ver detalles de ${p.name}">${p.label?`<span class="product-label">${p.label}</span>`:""}<button class="add-button" data-add="${p.id}" aria-label="Agregar ${p.name} al carrito">+</button></div><div class="product-info"><span class="product-category">${p.category}</span><h3 class="product-name-link" data-detail="${p.id}" tabindex="0" role="button" aria-label="Ver detalles de ${p.name}">${p.name}</h3><div class="product-bottom"><strong data-detail="${p.id}" class="product-price-link">${money(p.price)}</strong><span>${p.stock} disponibles</span></div><button class="detail-button" data-detail="${p.id}" aria-label="Ver detalles de ${p.name}">Ver detalles <span>↗</span></button></div></article>`).join("");
- empty.classList.toggle("hidden",shown.length>0);
+ const list=filterProducts(products,{category,term:searchTerm,sort,favoritesOnly,favorites:state.favorites});
+ $("productGrid").innerHTML=list.map(p=>{
+  const fav=state.favorites.includes(p.id);
+  return '<article class="product-card"><div class="product-image"><button type="button" class="image-link" data-detail="'+p.id+'" aria-label="Ver '+safe(p.name)+'"><img src="'+safe(p.image)+'" loading="lazy" alt="'+safe(p.name)+'"></button>'
+   +(p.tag?'<span class="product-label">'+safe(p.tag)+'</span>':"")
+   +'<button type="button" class="favorite-button '+(fav?"is-favorite":"")+'" data-favorite="'+p.id+'" aria-pressed="'+fav+'" aria-label="'+(fav?"Quitar de favoritos: ":"Guardar en favoritos: ")+safe(p.name)+'">'+(fav?"♥":"♡")+'</button>'
+   +'<button type="button" class="add-button" data-add="'+p.id+'" aria-label="Agregar '+safe(p.name)+' a la bolsa">+</button></div>'
+   +'<div class="product-info"><span class="product-category">'+safe(p.category)+'</span><h3>'+safe(p.name)+'</h3><div class="product-bottom"><strong>'+money(p.price)+'</strong><span>'+p.stock+' disponibles (demo)</span></div>'
+   +'<button type="button" class="detail-button" data-detail="'+p.id+'">Explorar pieza <span aria-hidden="true">↗</span></button></div></article>';
+ }).join("");
+ $("emptyState").classList.toggle("hidden",list.length!==0);
+ $("resultsCount").textContent=list.length+" "+(list.length===1?"pieza":"piezas");
+ $("favoritesCount").textContent=state.favorites.length;
 }
-document.getElementById("filters").addEventListener("click",e=>{const btn=e.target.closest("button[data-category]");if(!btn)return;category=btn.dataset.category;document.querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b===btn));renderProducts()});
-document.getElementById("searchInput").addEventListener("input",renderProducts);
-
-const productModal=document.getElementById("productModal");
-const productModalBackdrop=document.getElementById("productModalBackdrop");
-let selectedProduct=null;
-function openProductDetails(id){
- selectedProduct=products.find(p=>p.id===Number(id));
- if(!selectedProduct)return;
- document.getElementById("detailImage").src=selectedProduct.image;
- document.getElementById("detailImage").alt=selectedProduct.name;
- document.getElementById("detailCategory").textContent=selectedProduct.category.toUpperCase()+" · JOYERÍA J-C";
- document.getElementById("detailName").textContent=selectedProduct.name;
- document.getElementById("detailPrice").textContent=money(selectedProduct.price);
- document.getElementById("detailDescription").textContent="Una pieza seleccionada para complementar tu estilo. Diseño cuidado, acabado elegante y presentación especial, ideal para regalar o conservar en tus momentos más importantes.";
- document.getElementById("detailStock").textContent=selectedProduct.stock+" unidades disponibles";
- productModal.classList.remove("hidden");
- productModalBackdrop.classList.remove("hidden");
- productModal.setAttribute("aria-hidden","false");
- document.body.classList.add("modal-open");
- document.getElementById("closeProductModal").focus();
-}
-function closeProductDetails(){
- productModal.classList.add("hidden");
- productModalBackdrop.classList.add("hidden");
- productModal.setAttribute("aria-hidden","true");
- document.body.classList.remove("modal-open");
- selectedProduct=null;
-}
-grid.addEventListener("click",e=>{
- const add=e.target.closest("[data-add]");
- if(add){
-  const p=products.find(x=>x.id===Number(add.dataset.add));
-  if(!p)return;
-  const found=cart.find(x=>x.id===p.id);
-  if(found)found.qty++;else cart.push({...p,qty:1});
-  renderCart();showToast(`${p.name} se agregó a tu bolsa`);
-  return;
- }
- const detail=e.target.closest("[data-detail]");
- if(detail){openProductDetails(detail.dataset.detail);return;}
- const card=e.target.closest("[data-open-product]");
- if(card)openProductDetails(card.dataset.openProduct);
-});
-document.getElementById("closeProductModal").addEventListener("click",closeProductDetails);
-productModalBackdrop.addEventListener("click",closeProductDetails);
-document.getElementById("detailAddToCart").addEventListener("click",()=>{
- if(!selectedProduct)return;
- const found=cart.find(x=>x.id===selectedProduct.id);
- if(found)found.qty++;else cart.push({...selectedProduct,qty:1});
- renderCart();showToast(`${selectedProduct.name} se agregó a tu bolsa`);
- closeProductDetails();
-});
-document.addEventListener("keydown",e=>{
- if(e.key==="Escape"&&!productModal.classList.contains("hidden"))closeProductDetails();
-});
-
 function renderCart(){
- const items=document.getElementById("cartItems");
- document.getElementById("cartCount").textContent=cart.reduce((s,p)=>s+p.qty,0);
- document.getElementById("cartTotal").textContent=money(cart.reduce((s,p)=>s+p.price*p.qty,0));
- items.innerHTML=cart.length?cart.map(p=>`<div class="cart-row"><img src="${p.image}" alt=""><div><h4>${p.name}</h4><small>${p.qty} × ${money(p.price)}</small></div><button class="remove-item" data-remove="${p.id}" aria-label="Quitar ${p.name}">×</button></div>`).join(""):`<p class="cart-empty">Tu bolsa está esperando una pieza especial.</p>`;
+ const {items,count,subtotal}=cartSummary(state.cart,products);
+ $("cartCount").textContent=count;
+ $("cartTotal").textContent=money(subtotal);
+ $("checkoutButton").disabled=count===0;
+ $("cartItems").innerHTML=items.length?items.map(({product:p,qty})=>'<div class="cart-row"><img src="'+safe(p.image)+'" alt=""><div><h4>'+safe(p.name)+'</h4><small>'+money(p.price)+' c/u</small><div class="quantity-controls"><button data-qty="'+p.id+'" data-change="-1" aria-label="Disminuir '+safe(p.name)+'">−</button><span>'+qty+'</span><button data-qty="'+p.id+'" data-change="1" aria-label="Aumentar '+safe(p.name)+'" '+(qty>=p.stock?"disabled":"")+'>+</button></div></div><button class="remove-item" data-remove="'+p.id+'" aria-label="Quitar '+safe(p.name)+'">×</button></div>').join(""):'<p class="cart-empty">Tu bolsa está esperando una pieza especial.</p>';
+ renderActivity();
 }
-document.getElementById("cartItems").addEventListener("click",e=>{const b=e.target.closest("[data-remove]");if(!b)return;cart=cart.filter(p=>p.id!==Number(b.dataset.remove));renderCart()});
-const drawer=document.getElementById("cartDrawer"),overlay=document.getElementById("cartOverlay");
-function openCart(){drawer.classList.add("open");overlay.classList.remove("hidden");drawer.setAttribute("aria-hidden","false")}
-function closeCart(){drawer.classList.remove("open");overlay.classList.add("hidden");drawer.setAttribute("aria-hidden","true")}
-document.getElementById("openCart").addEventListener("click",openCart);
-document.getElementById("closeCart").addEventListener("click",closeCart);
-overlay.addEventListener("click",closeCart);
-document.getElementById("checkoutButton").addEventListener("click",()=>{if(!cart.length){showToast("Agrega una joya antes de confirmar.");return}showToast("¡Pedido de demostración registrado! No se realizó ningún pago.");cart=[];renderCart();closeCart()});
-function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove("show"),2600)}
-document.getElementById("menuToggle").addEventListener("click",()=>{
- const nav=document.getElementById("mainNav");
- const expanded=nav.classList.toggle("show");
- document.getElementById("menuToggle").setAttribute("aria-expanded",String(expanded));
+function renderActivity(){
+ const orders=state.orders.slice().reverse();
+ $("ordersList").innerHTML=orders.length?orders.map(o=>'<article class="activity-entry"><div><strong>'+safe(o.id)+'</strong><span>'+new Date(o.createdAt).toLocaleDateString("es-CO")+' · '+o.items.length+' referencias</span></div><strong>'+money(o.subtotal)+'</strong><small>'+safe(o.status)+'</small></article>').join(""):'<p class="activity-placeholder">Aún no registras pedidos de demostración en este navegador.</p>';
+ const appointments=state.appointments.slice().reverse();
+ $("appointmentsList").innerHTML=appointments.length?appointments.map(a=>'<article class="activity-entry"><div><strong>'+safe(a.type)+'</strong><span>'+safe(a.date)+' · '+safe(a.time)+'</span></div><button type="button" data-cancel="'+safe(a.id)+'" class="text-action">Cancelar</button></article>').join(""):'<p class="activity-placeholder">No hay solicitudes de asesoría registradas en este navegador.</p>';
+ $("stockTotal").textContent=products.reduce((sum,p)=>sum+p.stock,0);
+ $("ordersTotal").textContent=orders.length;
+ $("orderValue").textContent=money(orders.length?Math.round(orders.reduce((sum,o)=>sum+o.subtotal,0)/orders.length):0);
+ drawChart($("chartPeriod")?.value||"semana");
+}
+function doAdd(id){
+ const p=product(id),result=addToCart(state.cart,p);
+ if(!result.added){notify(result.reason);return;}
+ state.cart=result.items;persist();renderCart();notify(p.name+" se agregó a tu bolsa.");
+}
+$("productGrid").addEventListener("click",event=>{
+ const add=event.target.closest("[data-add]"),detail=event.target.closest("[data-detail]"),favorite=event.target.closest("[data-favorite]");
+ if(add){doAdd(add.dataset.add);return;}
+ if(favorite){const id=Number(favorite.dataset.favorite);state.favorites=state.favorites.includes(id)?state.favorites.filter(x=>x!==id):[...state.favorites,id];persist();renderProducts();notify("Favoritos actualizados.");return;}
+ if(detail)openDetail(detail.dataset.detail);
 });
-document.querySelectorAll("#mainNav a").forEach(a=>a.addEventListener("click",()=>document.getElementById("mainNav").classList.remove("show")));
-document.getElementById("stockTotal").textContent=products.reduce((s,p)=>s+p.stock,0);
-renderProducts();renderCart();
-
-// Animaciones de aparición al desplazarse por la página.
-const revealTargets=document.querySelectorAll(".section-heading,.product-card,.editorial-copy,.editorial-image,.stat-card,.chart-card,.care-section>div");
-revealTargets.forEach(element=>element.classList.add("reveal"));
-if("IntersectionObserver" in window){
- const revealObserver=new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-   if(entry.isIntersecting){
-    entry.target.classList.add("visible");
-    revealObserver.unobserve(entry.target);
-   }
-  });
- },{threshold:.12});
- revealTargets.forEach(element=>revealObserver.observe(element));
-}else{
- revealTargets.forEach(element=>element.classList.add("visible"));
+$("filters").addEventListener("click",event=>{
+ const button=event.target.closest("[data-category]");if(!button)return;
+ category=button.dataset.category;
+ $("filters").querySelectorAll("button").forEach(b=>{const selected=b===button;b.classList.toggle("active",selected);b.setAttribute("aria-pressed",String(selected));});
+ renderProducts();
+});
+$("searchInput").addEventListener("input",event=>{searchTerm=event.target.value;renderProducts();});
+$("sortSelect").addEventListener("change",event=>{sort=event.target.value;renderProducts();});
+$("favoritesToggle").addEventListener("click",()=>{favoritesOnly=!favoritesOnly;$("favoritesToggle").setAttribute("aria-pressed",String(favoritesOnly));$("favoritesToggle").classList.toggle("selected",favoritesOnly);renderProducts();});
+function openDialog(element,backdrop){
+ lastFocus=document.activeElement;element.classList.remove("hidden");backdrop.classList.remove("hidden");element.setAttribute("aria-hidden","false");document.body.classList.add("modal-open");
+ element.querySelector("button:not([disabled]),input:not([disabled])")?.focus();
 }
-
-let chart;
+function closeDialog(element,backdrop){
+ element.classList.add("hidden");backdrop.classList.add("hidden");element.setAttribute("aria-hidden","true");document.body.classList.remove("modal-open");lastFocus?.focus();
+}
+function openDetail(id){
+ selectedProduct=product(id);if(!selectedProduct)return;
+ $("detailImage").src=selectedProduct.image;$("detailImage").alt=selectedProduct.name;
+ $("detailCategory").textContent=selectedProduct.category.toUpperCase()+" · JOYERÍA J-C";
+ $("detailName").textContent=selectedProduct.name;
+ $("detailPrice").textContent=money(selectedProduct.price);
+ $("detailDescription").textContent="Pieza de la colección J-C. "+selectedProduct.material+". Diseñada para regalar o acompañarte en momentos memorables.";
+ $("detailStock").textContent=selectedProduct.stock+" unidades (demostración)";
+ openDialog($("productModal"),$("productModalBackdrop"));
+}
+function closeDetail(){closeDialog($("productModal"),$("productModalBackdrop"));selectedProduct=null;}
+$("closeProductModal").addEventListener("click",closeDetail);
+$("productModalBackdrop").addEventListener("click",closeDetail);
+$("detailAddToCart").addEventListener("click",()=>{if(!selectedProduct)return;doAdd(selectedProduct.id);closeDetail();});
+const drawer=$("cartDrawer"),overlay=$("cartOverlay");
+function openCart(){lastFocus=document.activeElement;drawer.classList.add("open");overlay.classList.remove("hidden");drawer.setAttribute("aria-hidden","false");document.body.classList.add("modal-open");$("closeCart").focus();}
+function closeCart(){drawer.classList.remove("open");overlay.classList.add("hidden");drawer.setAttribute("aria-hidden","true");document.body.classList.remove("modal-open");lastFocus?.focus();}
+$("openCart").addEventListener("click",openCart);$("closeCart").addEventListener("click",closeCart);overlay.addEventListener("click",closeCart);
+$("cartItems").addEventListener("click",event=>{
+ const remove=event.target.closest("[data-remove]"),change=event.target.closest("[data-qty]");
+ if(remove){state.cart=state.cart.filter(x=>x.id!==Number(remove.dataset.remove));}
+ else if(change){const id=Number(change.dataset.qty),item=state.cart.find(x=>x.id===id);state.cart=setQuantity(state.cart,id,(item?.qty||0)+Number(change.dataset.change),products);}
+ else return;
+ persist();renderCart();
+});
+$("checkoutButton").addEventListener("click",()=>{
+ if(!state.cart.length){notify("Primero agrega una joya.");return;}
+ closeCart();openDialog($("checkoutDialog"),$("checkoutBackdrop"));
+});
+function showErrors(form,errors){form.querySelectorAll("[data-error]").forEach(el=>{el.textContent=errors[el.dataset.error]||"";});return Object.keys(errors).length>0;}
+$("checkoutForm").addEventListener("submit",event=>{
+ event.preventDefault();
+ const form=event.currentTarget,values={name:form.elements.namedItem("name").value,email:form.elements.namedItem("email").value,accept:form.elements.namedItem("accept").checked};
+ if(showErrors(form,validateCheckout(values)))return;
+ if(!state.cart.length){notify("La bolsa está vacía.");return;}
+ const order=createOrder(state.cart,products,new Date(),Math.random().toString(36).slice(2,6).toUpperCase());
+ state.orders=[...state.orders,order].slice(-30);state.cart=[];persist();renderCart();form.reset();
+ closeDialog($("checkoutDialog"),$("checkoutBackdrop"));
+ $("receiptText").textContent="Referencia "+order.id+" · "+money(order.subtotal)+". Registro local de demostración; no se envió ningún pedido comercial ni se realizó pago.";
+ openDialog($("receiptDialog"),$("receiptBackdrop"));notify("Pedido de demostración registrado en este dispositivo.");
+});
+$("closeCheckout").addEventListener("click",()=>closeDialog($("checkoutDialog"),$("checkoutBackdrop")));
+$("checkoutBackdrop").addEventListener("click",()=>closeDialog($("checkoutDialog"),$("checkoutBackdrop")));
+$("closeReceipt").addEventListener("click",()=>closeDialog($("receiptDialog"),$("receiptBackdrop")));
+$("receiptBackdrop").addEventListener("click",()=>closeDialog($("receiptDialog"),$("receiptBackdrop")));
+$("appointmentForm").elements.namedItem("date").min=localDateString();
+const timeSelect=$("appointmentForm").elements.namedItem("time");
+timeSelect.innerHTML='<option value="">Selecciona una hora</option>'+APPOINTMENT_TIMES.map(t=>'<option value="'+t+'">'+t+'</option>').join("");
+const typeSelect=$("appointmentForm").elements.namedItem("type");
+typeSelect.innerHTML='<option value="">Tipo de asesoría</option>'+APPOINTMENT_TYPES.map(t=>'<option value="'+safe(t)+'">'+safe(t)+'</option>').join("");
+$("appointmentForm").addEventListener("submit",event=>{
+ event.preventDefault();const form=event.currentTarget;
+ const data=Object.fromEntries(new FormData(form).entries());
+ const errors=validateAppointment(data,state.appointments);
+ if(showErrors(form,errors))return;
+ state.appointments.push({id:String(Date.now())+"-"+Math.random().toString(36).slice(2,6),date:data.date,time:data.time,type:data.type});
+ state.appointments=state.appointments.slice(-30);persist();form.reset();renderActivity();
+ notify("Solicitud de asesoría registrada solo en este navegador. No se envió a la joyería.");
+});
+$("appointmentsList").addEventListener("click",event=>{
+ const btn=event.target.closest("[data-cancel]");if(!btn)return;
+ state.appointments=state.appointments.filter(a=>a.id!==btn.dataset.cancel);persist();renderActivity();notify("Solicitud local cancelada.");
+});
+$("orderLookupForm").addEventListener("submit",event=>{
+ event.preventDefault();const query=$("orderLookup").value.trim().toUpperCase();const order=state.orders.find(o=>o.id.toUpperCase()===query);
+ $("lookupResult").textContent=order?"Pedido "+order.id+" · "+money(order.subtotal)+" · "+order.status+". Registro disponible solo en este dispositivo.":"No existe una referencia local con ese código. No se consultó un servidor.";
+});
+$("menuToggle").addEventListener("click",()=>{
+ const nav=$("mainNav"),open=nav.classList.toggle("show");$("menuToggle").setAttribute("aria-expanded",String(open));
+});
+$("mainNav").querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{$("mainNav").classList.remove("show");$("menuToggle").setAttribute("aria-expanded","false");}));
+document.addEventListener("keydown",event=>{
+ if(event.key==="Escape"){
+  if(!$("receiptDialog").classList.contains("hidden"))closeDialog($("receiptDialog"),$("receiptBackdrop"));
+  else if(!$("checkoutDialog").classList.contains("hidden"))closeDialog($("checkoutDialog"),$("checkoutBackdrop"));
+  else if(!$("productModal").classList.contains("hidden"))closeDetail();
+  else if(drawer.classList.contains("open"))closeCart();
+ }
+ if(event.key==="Tab"){
+  const active=[...document.querySelectorAll(".product-modal:not(.hidden),.dialog-card:not(.hidden),.cart-drawer.open")].at(-1);
+  if(!active)return;
+  const focusable=[...active.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled])')].filter(x=>x.getClientRects().length);
+  if(!focusable.length)return;
+  const first=focusable[0],last=focusable.at(-1);
+  if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+  else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+ }
+});
 function drawChart(period){
- const labels=period==="semana"?["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"]:["Jun","Jul","Ago","Sep","Oct","Nov"];
- const data=period==="semana"?[5,8,6,11,9,15,12]:[38,45,42,57,63,72];
- const ctx=document.getElementById("salesChart");
- if(chart)chart.destroy();
- chart=new Chart(ctx,{type:"line",data:{labels,datasets:[{label:"Pedidos",data,borderColor:"#b8955a",backgroundColor:"rgba(184,149,90,.12)",fill:true,tension:.38,pointRadius:4,pointBackgroundColor:"#b8955a"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:"#eee9e1"},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:10}}}}}});
+ const canvas=$("salesChart");if(!canvas)return;
+ const now=new Date(),days=period==="mes"?180:7;
+ const orders=state.orders.filter(o=>now-new Date(o.createdAt)<days*86400000);
+ const buckets=new Map();
+ for(let i=days-1;i>=0;i--){const d=new Date(now);d.setDate(now.getDate()-i);buckets.set(localDateString(d),0);}
+ orders.forEach(o=>{const key=localDateString(new Date(o.createdAt));if(buckets.has(key))buckets.set(key,buckets.get(key)+1);});
+ const rows=[...buckets.entries()];
+ const grouped=period==="mes"?Array.from({length:6},(_,i)=>{const part=rows.slice(i*30,(i+1)*30);return {label:"Periodo "+(i+1),value:part.reduce((n,x)=>n+x[1],0)};}):rows.map(([date,value])=>({label:date.slice(5),value}));
+ if(window.Chart){
+  if(window.jcChart)window.jcChart.destroy();
+  window.jcChart=new window.Chart(canvas,{type:"line",data:{labels:grouped.map(x=>x.label),datasets:[{data:grouped.map(x=>x.value),borderColor:"#b69255",backgroundColor:"rgba(182,146,85,.15)",fill:true,tension:.35}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}},x:{grid:{display:false}}}}});
+  $("chartFallback").classList.add("hidden");
+ }else{
+  canvas.classList.add("hidden");$("chartFallback").classList.remove("hidden");
+  $("chartFallback").textContent=grouped.map(x=>x.label+": "+x.value).join(" · ")+" pedidos locales";
+ }
 }
-document.getElementById("chartPeriod").addEventListener("change",e=>drawChart(e.target.value));
-drawChart("semana");
+$("chartPeriod").addEventListener("change",event=>drawChart(event.target.value));
+renderProducts();renderCart();persist();
+const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(!reduced&&"IntersectionObserver" in window){
+ const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("visible");observer.unobserve(entry.target);}}),{threshold:.08});
+ document.querySelectorAll(".section-heading,.editorial-copy,.editorial-image,.stat-card,.chart-card,.care-section>div,.experience-panel").forEach(el=>{el.classList.add("reveal");observer.observe(el);});
+}

@@ -1,0 +1,18 @@
+name: Calidad Fase II
+on:
+  push:
+    branches: [main, "fase-ii/**"]
+  pull_request:
+    branches: [main]
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Validar sintaxis
+        run: npm run check
+      - name: Ejecutar pruebas de reglas de negocio
+        run: npm test
