@@ -1,0 +1,13 @@
+{
+  "name": "joyeria-jc",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Joyería J-C · Fase II: escaparate y flujo de compra demostrativo",
+  "scripts": {
+    "dev": "python -m http.server 5500",
+    "test": "node --test tests/*.test.js",
+    "check": "node --check js/app.js && node --check src/data/products.js && node --check src/models/shop.js && node --check src/services/storage.js && node --check src/utils/format.js"
+  },
+  "engines": {"node": ">=20"}
+}
