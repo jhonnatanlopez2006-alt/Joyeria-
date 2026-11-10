@@ -1,4 +1,4 @@
-name: Calidad y recursos visuales
+name: Calidad y comprobación multimedia
 on:
   push:
     branches: [main, "fase-ii/**", "design/**"]
@@ -10,26 +10,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: Validar sintaxis
-        run: npm run check
-      - name: Ejecutar pruebas de reglas de negocio
-        run: npm test
-  media-check:
+        with: {node-version: "22"}
+      - run: npm run check
+      - run: npm test
+  media-probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Confirmar origen de videos y fotografía principal
+      - name: Diagnóstico de recursos externos
         shell: bash
         run: |
-          set -euo pipefail
           urls=(
             "https://assets.mixkit.co/videos/preview/mixkit-engagement-jewelry-5218-large.mp4"
-            "https://assets.mixkit.co/videos/preview/mixkit-case-with-engagement-or-promise-rings-5225-large.mp4"
-            "https://assets.mixkit.co/videos/preview/mixkit-wedding-rings-in-its-case-5181-large.mp4"
+            "https://assets.mixkit.co/videos/preview/mixkit-engagement-jewelry-5218-small.mp4"
+            "https://videos.pexels.com/video-files/9430551/9430551-hd_1920_1080_25fps.mp4"
+            "https://videos.pexels.com/video-files/9430551/9430551-hd_1280_720_25fps.mp4"
+            "https://videos.pexels.com/video-files/5705007/5705007-hd_1920_1080_25fps.mp4"
+            "https://videos.pexels.com/video-files/35764318/35764318-hd_1920_1080_50fps.mp4"
             "https://images.pexels.com/photos/13771607/pexels-photo-13771607.jpeg"
+            "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=700"
           )
           for url in "${urls[@]}"; do
-            echo "Verificando $url"
-            curl --retry 2 --connect-timeout 15 --max-time 40 -fsSL -r 0-1023 -o /dev/null "$url"
+            result=$(curl -L -r 0-1023 --max-time 15 -s -o /dev/null -w '%{http_code} %{content_type} %{size_download}' "$url")
+            echo "$result $url"
           done
