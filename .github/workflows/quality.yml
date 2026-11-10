@@ -1,7 +1,7 @@
-name: Calidad y diagnóstico de medios
+name: Calidad y depuración de medios
 on:
   push:
-    branches: [main, "fase-ii/**", "design/**"]
+    branches: [main, "design/**"]
   pull_request:
     branches: [main]
 jobs:
@@ -13,27 +13,19 @@ jobs:
         with: {node-version: "22"}
       - run: npm run check
       - run: npm test
-  video-discovery:
+  media-source-investigation:
     runs-on: ubuntu-latest
     steps:
-      - name: Consultar recursos oficiales desde sus páginas públicas
+      - name: Inspeccionar metadatos públicos del reproductor
         shell: bash
         run: |
           python - <<'PY'
-          import urllib.request,re,html
-          urls=[
-            'https://www.pexels.com/video/silver-jewelries-on-the-table-9430551/',
-            'https://www.pexels.com/video/close-up-of-jewelry-5705007/',
-            'https://pixabay.com/videos/jewelry-ring-bracelet-jewellery-219228/',
-            'https://mixkit.co/free-stock-video/engagement-jewelry-5218/'
-          ]
-          for u in urls:
-            try:
-              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0 (compatible; AcademicPreview/1.0)'})
-              with urllib.request.urlopen(req,timeout=12) as res:
-                data=res.read(2000000).decode('utf8','replace')
-                matches=list(dict.fromkeys(re.findall(r'https?[^"\\\s<>]{1,270}?(?:\\.mp4|mp4\\?[^"\\\s<>]{1,90})',html.unescape(data),re.I)))
-                print('PAGE',res.status,len(data),u)
-                print('MATCHES',matches[:12])
-            except Exception as e:print('FAIL',u,str(e)[:180])
+          import urllib.request,re
+          url='https://mixkit.co/free-stock-video/engagement-jewelry-5218/'
+          with urllib.request.urlopen(url,timeout=15) as resp:
+            s=resp.read().decode('utf8','replace')
+          for pattern in ('mp4','video_url','video-src','videoSrc','videoPlayer','video-file','5218','assets.mixkit.co','source src','preview'):
+            print('PATTERN',pattern,'COUNT',s.lower().count(pattern.lower()))
+            for match in list(re.finditer(re.escape(pattern),s,re.I))[:3]:
+              print(repr(s[max(0,match.start()-180):match.end()+230]))
           PY
