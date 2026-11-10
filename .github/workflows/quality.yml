@@ -1,4 +1,4 @@
-name: Calidad de código y recursos audiovisuales
+name: Calidad, videos y experiencia visual
 on:
   push:
     branches: [main, "fase-ii/**", "design/**"]
@@ -11,14 +11,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: "22"}
-      - name: Sintaxis
-        run: npm run check
-      - name: Reglas de negocio
-        run: npm test
+      - run: npm run check
+      - run: npm test
   media-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Verificar videos e imagen de catálogo
+      - name: Validar videos y fotografía
         shell: bash
         run: |
           set -euo pipefail
@@ -29,6 +27,24 @@ jobs:
             "https://images.pexels.com/photos/13771607/pexels-photo-13771607.jpeg"
           )
           for url in "${urls[@]}"; do
-            echo "Verificando $url"
             curl --fail --location --retry 2 --connect-timeout 15 --max-time 35 --silent --show-error --range 0-1023 --output /dev/null "$url"
           done
+  browser-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - name: Instalar navegador de pruebas
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Verificar diseño, filtros, carrito, imagen y responsive
+        run: |
+          python3 -m http.server 5500 --bind 127.0.0.1 >/tmp/jc-web.log 2>&1 &
+          node tests/ui-smoke.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas-fase-ii-joyeria
+          path: evidencias/
