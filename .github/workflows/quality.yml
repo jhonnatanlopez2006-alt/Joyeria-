@@ -1,7 +1,7 @@
-name: Calidad y depuración de medios
+name: Calidad de código y recursos audiovisuales
 on:
   push:
-    branches: [main, "design/**"]
+    branches: [main, "fase-ii/**", "design/**"]
   pull_request:
     branches: [main]
 jobs:
@@ -11,21 +11,24 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: {node-version: "22"}
-      - run: npm run check
-      - run: npm test
-  media-source-investigation:
+      - name: Sintaxis
+        run: npm run check
+      - name: Reglas de negocio
+        run: npm test
+  media-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Inspeccionar metadatos públicos del reproductor
+      - name: Verificar videos e imagen de catálogo
         shell: bash
         run: |
-          python - <<'PY'
-          import urllib.request,re
-          url='https://mixkit.co/free-stock-video/engagement-jewelry-5218/'
-          with urllib.request.urlopen(url,timeout=15) as resp:
-            s=resp.read().decode('utf8','replace')
-          for pattern in ('mp4','video_url','video-src','videoSrc','videoPlayer','video-file','5218','assets.mixkit.co','source src','preview'):
-            print('PATTERN',pattern,'COUNT',s.lower().count(pattern.lower()))
-            for match in list(re.finditer(re.escape(pattern),s,re.I))[:3]:
-              print(repr(s[max(0,match.start()-180):match.end()+230]))
-          PY
+          set -euo pipefail
+          urls=(
+            "https://videos.pexels.com/video-files/9430551/9430551-uhd_4096_2160_25fps.mp4"
+            "https://videos.pexels.com/video-files/5705007/5705007-uhd_4096_2160_24fps.mp4"
+            "https://videos.pexels.com/video-files/35764318/15163401_3840_2160_50fps.mp4"
+            "https://images.pexels.com/photos/13771607/pexels-photo-13771607.jpeg"
+          )
+          for url in "${urls[@]}"; do
+            echo "Verificando $url"
+            curl --fail --location --retry 2 --connect-timeout 15 --max-time 35 --silent --show-error --range 0-1023 --output /dev/null "$url"
+          done

@@ -152,9 +152,9 @@ Se rediseñó la experiencia visual manteniendo la identidad J-C. La nueva versi
 
 **Videos:** clips externos de joyería, usados como contenido editorial ilustrativo, no representaciones certificadas de los productos vendidos. Se cargan silenciados, en bucle, con `playsinline`; los secundarios se cargan de forma diferida. Los archivos visuales tienen imágenes de fondo para fallos de red o bloqueo de reproducción automática y respetan `prefers-reduced-motion`. Su disponibilidad depende del proveedor y de la política del navegador. Las fuentes y condiciones de la licencia deben revisarse antes de un uso comercial.
 
-**Fuentes audiovisuales:** Mixkit, clips «Engagement jewelry» (5218), «Case with engagement or promise rings» (5225) y «Wedding rings in its case» (5181). Páginas de referencia:
-- https://mixkit.co/free-stock-video/engagement-jewelry-5218/
-- https://mixkit.co/free-stock-video/case-with-engagement-or-promise-rings-5225/
-- https://mixkit.co/free-stock-video/wedding-rings-in-its-case-5181/
+**Fuentes audiovisuales:** Pexels (videos de joyería bajo licencia de Pexels):
+- https://www.pexels.com/video/silver-jewelries-on-the-table-9430551/
+- https://www.pexels.com/video/close-up-of-jewelry-5705007/
+- https://www.pexels.com/video/elegant-woman-with-jewelry-in-soft-focus-35764318/
 
 **Verificación:** la comprobación en GitHub Actions valida sintaxis y lógica de negocio. La prueba de reproducción real en navegadores y la validación visual por resolución requieren revisión manual; los enlaces de terceros pueden estar sujetos a restricciones.
