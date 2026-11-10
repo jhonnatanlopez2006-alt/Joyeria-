@@ -1,4 +1,4 @@
-name: Calidad y comprobación multimedia
+name: Calidad y diagnóstico de medios
 on:
   push:
     branches: [main, "fase-ii/**", "design/**"]
@@ -13,23 +13,27 @@ jobs:
         with: {node-version: "22"}
       - run: npm run check
       - run: npm test
-  media-probe:
+  video-discovery:
     runs-on: ubuntu-latest
     steps:
-      - name: Diagnóstico de recursos externos
+      - name: Consultar recursos oficiales desde sus páginas públicas
         shell: bash
         run: |
-          urls=(
-            "https://assets.mixkit.co/videos/preview/mixkit-engagement-jewelry-5218-large.mp4"
-            "https://assets.mixkit.co/videos/preview/mixkit-engagement-jewelry-5218-small.mp4"
-            "https://videos.pexels.com/video-files/9430551/9430551-hd_1920_1080_25fps.mp4"
-            "https://videos.pexels.com/video-files/9430551/9430551-hd_1280_720_25fps.mp4"
-            "https://videos.pexels.com/video-files/5705007/5705007-hd_1920_1080_25fps.mp4"
-            "https://videos.pexels.com/video-files/35764318/35764318-hd_1920_1080_50fps.mp4"
-            "https://images.pexels.com/photos/13771607/pexels-photo-13771607.jpeg"
-            "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=700"
-          )
-          for url in "${urls[@]}"; do
-            result=$(curl -L -r 0-1023 --max-time 15 -s -o /dev/null -w '%{http_code} %{content_type} %{size_download}' "$url")
-            echo "$result $url"
-          done
+          python - <<'PY'
+          import urllib.request,re,html
+          urls=[
+            'https://www.pexels.com/video/silver-jewelries-on-the-table-9430551/',
+            'https://www.pexels.com/video/close-up-of-jewelry-5705007/',
+            'https://pixabay.com/videos/jewelry-ring-bracelet-jewellery-219228/',
+            'https://mixkit.co/free-stock-video/engagement-jewelry-5218/'
+          ]
+          for u in urls:
+            try:
+              req=urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0 (compatible; AcademicPreview/1.0)'})
+              with urllib.request.urlopen(req,timeout=12) as res:
+                data=res.read(2000000).decode('utf8','replace')
+                matches=list(dict.fromkeys(re.findall(r'https?[^"\\\s<>]{1,270}?(?:\\.mp4|mp4\\?[^"\\\s<>]{1,90})',html.unescape(data),re.I)))
+                print('PAGE',res.status,len(data),u)
+                print('MATCHES',matches[:12])
+            except Exception as e:print('FAIL',u,str(e)[:180])
+          PY
