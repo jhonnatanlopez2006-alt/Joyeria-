@@ -1,7 +1,7 @@
-name: Calidad Fase II
+name: Calidad y recursos visuales
 on:
   push:
-    branches: [main, "fase-ii/**"]
+    branches: [main, "fase-ii/**", "design/**"]
   pull_request:
     branches: [main]
 jobs:
@@ -16,3 +16,20 @@ jobs:
         run: npm run check
       - name: Ejecutar pruebas de reglas de negocio
         run: npm test
+  media-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirmar origen de videos y fotografía principal
+        shell: bash
+        run: |
+          set -euo pipefail
+          urls=(
+            "https://assets.mixkit.co/videos/preview/mixkit-engagement-jewelry-5218-large.mp4"
+            "https://assets.mixkit.co/videos/preview/mixkit-case-with-engagement-or-promise-rings-5225-large.mp4"
+            "https://assets.mixkit.co/videos/preview/mixkit-wedding-rings-in-its-case-5181-large.mp4"
+            "https://images.pexels.com/photos/13771607/pexels-photo-13771607.jpeg"
+          )
+          for url in "${urls[@]}"; do
+            echo "Verificando $url"
+            curl --retry 2 --connect-timeout 15 --max-time 40 -fsSL -r 0-1023 -o /dev/null "$url"
+          done
