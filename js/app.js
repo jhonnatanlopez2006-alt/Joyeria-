@@ -188,3 +188,43 @@ if(!reduced&&"IntersectionObserver" in window){
  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add("visible");observer.unobserve(entry.target);}}),{threshold:.08});
  document.querySelectorAll(".section-heading,.editorial-copy,.editorial-image,.stat-card,.chart-card,.care-section>div,.experience-panel").forEach(el=>{el.classList.add("reveal");observer.observe(el);});
 }
+
+/* Rediseño visual: tolerancia a fallos de imagen y gestión eficiente de videos. */
+document.addEventListener("error",event=>{
+ const img=event.target;
+ if(!(img instanceof HTMLImageElement)||img.dataset.fallbackApplied)return;
+ img.dataset.fallbackApplied="true";
+ const isRing=img.alt?.toLowerCase().includes("solitario")||img.src?.includes("anillo-solitario");
+ img.src=isRing?"assets/solitario-fallback.svg":"assets/jc-fallback.svg";
+},true);
+const backgroundVideos=[...document.querySelectorAll("video[data-ambient]")];
+const canAnimate=!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+for(const video of backgroundVideos){
+ video.muted=true;
+ video.setAttribute("aria-hidden","true");
+ video.addEventListener("error",()=>{video.style.display="none";},true);
+}
+if(!canAnimate){backgroundVideos.forEach(video=>{video.pause();video.removeAttribute("autoplay");});}
+else if("IntersectionObserver" in window){
+ const mediaObserver=new IntersectionObserver(entries=>{
+  entries.forEach(({target,isIntersecting})=>{
+   const video=target;
+   if(isIntersecting){
+    const source=video.querySelector("source[data-src]");
+    if(source&&!source.src){source.src=source.dataset.src;video.load();}
+    video.play().catch(()=>{/* Poster/background visible if autoplay is blocked. */});
+   }else video.pause();
+  });
+ },{rootMargin:"150px 0px",threshold:.05});
+ backgroundVideos.forEach(video=>mediaObserver.observe(video));
+}else{
+ backgroundVideos.forEach(video=>{
+  const source=video.querySelector("source[data-src]");
+  if(source){source.src=source.dataset.src;video.load();}
+  video.play().catch(()=>{});
+ });
+}
+document.addEventListener("visibilitychange",()=>{
+ if(document.hidden){backgroundVideos.forEach(video=>video.pause());}
+ else if(canAnimate){backgroundVideos.filter(video=>video.getBoundingClientRect().top<innerHeight&&video.getBoundingClientRect().bottom>0).forEach(video=>video.play().catch(()=>{}));}
+});

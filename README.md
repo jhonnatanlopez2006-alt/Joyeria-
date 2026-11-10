@@ -143,3 +143,18 @@ Los commits de la Fase I se conservan. La Fase II documenta incrementos con nomb
 **Repositorio:** https://github.com/jhonnatanlopez2006-alt/Joyeria-  
 
 **Resumen:** Se transformó el prototipo inicial en una vitrina modular y responsiva con catálogo avanzado, favoritos, carrito persistente, pedidos y citas de demostración, indicadores basados en registros locales y componentes accesibles. Se incorporaron pruebas automatizadas, flujo de calidad y documentación técnica para continuar con el backend en etapas posteriores.
+
+
+## Evolución visual editorial (noviembre de 2026)
+Se rediseñó la experiencia visual manteniendo la identidad J-C. La nueva versión incorpora una portada cinematográfica, tipografía editorial con jerarquía reforzada, composición responsive, tarjetas de catálogo más despejadas, nueva sección manifiesto y relato audiovisual en las áreas de marca y asesoría. Los formularios, favoritos, carrito e historial de la Fase II permanecen operativos.
+
+**Corrección Anillo Solitario:** se sustituyó la referencia de la imagen que aparecía vacía y se añadió `assets/solitario-fallback.svg` como representación **ilustrada** de emergencia si no carga la fotografía. El resto de tarjetas también utilizan `assets/jc-fallback.svg` para evitar cuadros vacíos.
+
+**Videos:** clips externos de joyería, usados como contenido editorial ilustrativo, no representaciones certificadas de los productos vendidos. Se cargan silenciados, en bucle, con `playsinline`; los secundarios se cargan de forma diferida. Los archivos visuales tienen imágenes de fondo para fallos de red o bloqueo de reproducción automática y respetan `prefers-reduced-motion`. Su disponibilidad depende del proveedor y de la política del navegador. Las fuentes y condiciones de la licencia deben revisarse antes de un uso comercial.
+
+**Fuentes audiovisuales:** Pexels (videos de joyería bajo licencia de Pexels):
+- https://www.pexels.com/video/silver-jewelries-on-the-table-9430551/
+- https://www.pexels.com/video/close-up-of-jewelry-5705007/
+- https://www.pexels.com/video/elegant-woman-with-jewelry-in-soft-focus-35764318/
+
+**Verificación:** la comprobación en GitHub Actions valida sintaxis y lógica de negocio. La prueba de reproducción real en navegadores y la validación visual por resolución requieren revisión manual; los enlaces de terceros pueden estar sujetos a restricciones.
